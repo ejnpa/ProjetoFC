@@ -1,7 +1,7 @@
 import uuid
 from fastapi import UploadFile, HTTPException
 from repositories.notes_repository import NotesRepository
-from storage import upload_files_to_storage, download_files_from_storage, delete_file_from_storage
+from services.storage.storage import upload_files_to_storage, download_files_from_storage, delete_file_from_storage
 from utils import generate_file_thumbnail, extract_text_from_pdf
 
 class NotesService:

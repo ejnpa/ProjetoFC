@@ -1,7 +1,7 @@
 import io
 import re 
 import pypdfium2 as pdfium
-from storage import upload_files_to_storage
+from services.storage.storage import upload_files_to_storage
 import os
 import json
 
@@ -42,4 +42,5 @@ def load_structure():
         print(f"Erro ao carregar dados da escola: {e}")
         return {"avisos": f"Erro ao carregar dados da escola: {e}"}
 
+     
         

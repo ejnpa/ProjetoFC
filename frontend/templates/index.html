@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Noteify{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <header class="topo">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Noteify">
+        </div>
+        
+        <nav class="menu">
+            <a href="/">Página Inicial</a>
+            <a href="/contactos">Contactos</a>
+            <a href="/disciplinas">Explorar</a>
+            {% if session['utilizador_nome'] %}
+                <a href="/upload">Upload</a>
+                <a href="/meusApontamentos">Meus Apontamentos</a>
+            {% endif %}
+        </nav>
+
+        <div class="topo-botoes">
+            {% if session['utilizador_nome'] %}
+                <span class="boas-vindas-topo">Bem-vindo, <strong>{{ session['utilizador_nome'] }}</strong>!</span>
+                <a href="/logout" class="btn-login-topo">Sair</a>
+            {% else %}
+                <a href="/registo" class="btn-topo">Registar</a>
+                <a href="/login" class="btn-login-topo">Entrar</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                
+                {% if category == 'saudacao_popup' %}
+                    <div id="modalSaudacao">
+                        <div class="modal-conteudo">
+                            <h2>{{ message }} 🎉</h2>
+                            <p>Bem-vindo de volta ao Noteify!</p>
+                            
+                            <button onclick="fecharPopUp()" class="btn-fechar-modal">
+                                Fechar e Continuar
+                            </button>
+                        </div>
+                    </div>
+
+                    <script>
+                        function fecharPopUp() {
+                            document.getElementById('modalSaudacao').style.display = 'none';
+                        }
+                    </script>
+
+                {% else %}
+                    <div class="msg-flash-tradicional {% if category == 'success' %}msg-sucesso{% else %}msg-erro{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

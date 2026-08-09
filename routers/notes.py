@@ -10,7 +10,7 @@ import io
 from database import get_db
 from models import Notes, Users
 from security import get_current_user
-from storage import upload_files_to_storage
+from services.storage.storage import upload_files_to_storage
 from repositories.notes_repository import NotesRepository
 from services.notes_service import NotesService
 from utils import load_structure
