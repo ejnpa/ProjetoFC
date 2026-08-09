@@ -1,7 +1,7 @@
 import os 
-from .strategy import StorageStrategy
+from .IStorage import StorageInterface
 
-class LocalStorage(StorageStrategy):
+class LocalStorage(StorageInterface):
     def __init__(self):
         self.upload_dir = "LOCAL_UPLOADS"
         os.makedirs(self.upload_dir, exist_ok=True)

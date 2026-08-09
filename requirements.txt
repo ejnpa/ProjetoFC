@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+passlib
+bcrypt
+python-jose[cryptography]
+pypdfium2==4.30.0
+azure-storage-blob
+pydantic
+email-validator
+python-multipart

@@ -1,9 +1,8 @@
 import os
-from abc import abstractmethod
 from azure.storage.blob import BlobServiceClient
-from .strategy import StorageStrategy
+from .IStorage import StorageInterface
 
-class AzureStorage(StorageStrategy):
+class AzureStorage(StorageInterface):
     def __init__(self):
         connection_string = os.getenv("STORAGE_STORAGE_CONNECTION_STRING", "UseDevelopmentStorage=true")
         self.container_name =  "notes"

@@ -1,11 +1,11 @@
 import os
-from .strategy import StorageStrategy
-from .local_storage import LocalStorage
-from .gcp_storage import GCPStorage
-from .azure_storage import AzureStorage
+from .IStorage import StorageInterface
+from .LocalStorage import LocalStorage
+from .GCPStorage import GCPStorage
+from .AzureStorage import AzureStorage
 
 
-def get_storage_provider() -> StorageStrategy:
+def get_storage_provider() -> StorageInterface:
     provider = os.getenv("CLOUD_PROVIDER", "AZURE").upper()
     
     if provider == "LOCAL":

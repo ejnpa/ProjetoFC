@@ -1,5 +1,5 @@
-import os
-from ABC import abstractmethod
+
+from abc import ABC, abstractmethod
 
 class StorageInterface(ABC):
     @abstractmethod

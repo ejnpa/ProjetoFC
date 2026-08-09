@@ -1,16 +1,11 @@
-from http.client import HTTPException
 
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
-from fastapi import Response
-import uuid
-import pypdfium2 as pdfium
-import io
 
 from database import get_db
-from models import Notes, Users
+from models import Users
 from security import get_current_user
-from services.storage.storage import upload_files_to_storage
 from repositories.notes_repository import NotesRepository
 from services.notes_service import NotesService
 from utils import load_structure
@@ -24,26 +19,34 @@ def get_notes_service(db:Session = Depends(get_db))->NotesService:
     repo = NotesRepository(db)
     return NotesService(repo)
 
-@router.post("/upload")
-def upload_file(
-    title: str = Form(...),
-    discipline: str = Form(...),
-    file: UploadFile = File(...),
-    service: NotesService = Depends(get_notes_service),
-    current_user: Users = Depends(get_current_user)
-):
-    note = service.process_upload(title, discipline, file, current_user.email)
-    return {"message": "Upload completo e miniatura gerada!", "note": note}
-
-
-@router.get("/")
-def list_notes(service: NotesService = Depends(get_notes_service)):
-    return service.get_all_notes()
-
 @router.get("/structure")
 def get_structure():
     """Devolve a árvore de Escolas, Cursos e Disciplinas (JSON) para desenhar as Dropdowns."""
     return load_structure()
+
+@router.get("/")
+def list_notes(
+    school:str=None,
+    course:str=None,
+    year:str=None,
+    subject:str=None,
+    service: NotesService = Depends(get_notes_service)
+):
+    return service.get_filtered_notes(school, course, year, subject)
+
+@router.post("/upload")
+def upload_file(
+    title: str = Form(...),
+    school: str = Form(...),
+    course: str = Form(...),
+    year: str = Form(...),
+    subject: str = Form(...),
+    file: UploadFile = File(...),
+    service: NotesService = Depends(get_notes_service),
+    current_user: Users = Depends(get_current_user)
+):
+    note = service.process_upload(title, subject, file, current_user.email)
+    return {"message": "Upload completo!", "note": note}
 
 
 @router.get("/{note_id}/read")
@@ -86,3 +89,8 @@ def delete_note(note_id:str, service: NotesService = Depends(get_notes_service),
     """Apaga da BD e apaga os blobs da Cloud."""
     service.delete_note(note_id, current_user.email)
     return {"message": "Apontamento apagado com sucesso"}
+
+
+
+
+

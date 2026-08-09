@@ -1,4 +1,4 @@
-from repositories.user_repository import UsersRepository
+from repositories.users_repository import UsersRepository
 from security import get_password_hash, verify_password, create_access_token
 
 class UsersService:

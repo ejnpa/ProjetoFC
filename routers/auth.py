@@ -5,9 +5,8 @@ from pydantic import BaseModel, EmailStr
 
 
 from database import get_db
-from models import Users
 from repositories.users_repository import UsersRepository
-from services.users_service import UsersService
+from services.user_service import UsersService
 
 
 router = APIRouter(

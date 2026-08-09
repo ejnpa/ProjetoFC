@@ -8,7 +8,7 @@ class Notes(Base):
     school = Column(String, index=True)
     course = Column(String, index=True)
     year = Column(String, index=True)  
-    discipline = Column(String, index=True)
+    subject = Column(String, index=True)
     autor = Column(String)
     file_url = Column(String, nullable=True)
     thumbnail_url=Column(String, nullable=True)
