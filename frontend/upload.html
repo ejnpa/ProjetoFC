@@ -14,8 +14,8 @@
         </div>
         <nav class="menu" id="menu-principal">
             <a href="index.html">Página Inicial</a>
-            <a href="contactos.html">Contactos</a>
-            <a href="disciplinas.html">Explorar</a>
+            <a href="contacts.html">Contactos</a>
+            <a href="subjects.html">Explorar</a>
         </nav>
         <div class="topo-botoes" id="area-autenticacao"></div>
     </header>
@@ -97,10 +97,10 @@
 
             menu.innerHTML = `
                 <a href="index.html">Página Inicial</a>
-                <a href="contactos.html">Contactos</a>
-                <a href="disciplinas.html">Explorar</a>
+                <a href="contacts.html">Contactos</a>
+                <a href="subjects.html">Explorar</a>
                 <a href="upload.html" class="ativo">Upload</a>
-                <a href="meusApontamentos.html">Meus Apontamentos</a>
+                <a href="myNotes.html">Meus Apontamentos</a>
             `;
             areaAuth.innerHTML = `
                 <span style="margin-right: 15px;">Bem-vindo, <strong>${nome}</strong>!</span>
@@ -123,10 +123,10 @@
 
             const formData = new FormData();
             formData.append('title', document.getElementById('titulo').value);
-            formData.append('escola', document.getElementById('escola').value);
-            formData.append('curso', document.getElementById('curso').value);
-            formData.append('ano', document.getElementById('ano').value);
-            formData.append('discipline', document.getElementById('disciplina').value);
+            formData.append('school', document.getElementById('escola').value);
+            formData.append('course', document.getElementById('curso').value);
+            formData.append('year', document.getElementById('ano').value);
+            formData.append('subject', document.getElementById('disciplina').value);
             formData.append('file', document.getElementById('ficheiro_pdf').files[0]);
 
             try {
@@ -140,7 +140,7 @@
 
                 if (resposta.ok) {
                     alert("Apontamento enviado com sucesso!");
-                    window.location.href = 'meusApontamentos.html';
+                    window.location.href = 'myNotes.html';
                 } else {
                     const erro = await resposta.json();
                     alert("Erro no upload: " + (erro.detail || "Erro desconhecido"));

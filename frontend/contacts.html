@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contactos - exe.cuTIve</title>
+    <title>Contactos - exe.cuTIva</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
     <header class="topo">
         <div class="logo">
-            <img src="images/logo.png" alt="exe.cuTIve">
+            <img src="images/logo.png" alt="exe.cuTIva">
         </div>
         <nav class="menu" id="menu-principal">
             <a href="index.html">Página Inicial</a>
-            <a href="contactos.html" class="ativo">Contactos</a>
-            <a href="disciplinas.html">Explorar</a>
+            <a href="contacts.html" class="ativo">Contactos</a>
+            <a href="subjects.html">Explorar</a>
         </nav>
         <div class="topo-botoes" id="area-autenticacao"></div>
     </header>
@@ -52,7 +51,7 @@
     </section>
 
     <footer class="footer">
-        <p>© 2026 exe.cuTIve - Plataforma de Partilha de Apontamentos Académicos</p>
+        <p>© 2026 exe.cuTIva - Plataforma de Partilha de Apontamentos Académicos</p>
     </footer>
 
     <script>
@@ -80,10 +79,10 @@
             if (token && nome) {
                 menu.innerHTML = `
                     <a href="index.html">Página Inicial</a>
-                    <a href="contactos.html" class="ativo">Contactos</a>
-                    <a href="disciplinas.html">Explorar</a>
+                    <a href="contacts.html" class="ativo">Contactos</a>
+                    <a href="subjects.html">Explorar</a>
                     <a href="upload.html">Upload</a>
-                    <a href="meusApontamentos.html">Meus Apontamentos</a>
+                    <a href="myNotes.html">Meus Apontamentos</a>
                 `;
                 areaAuth.innerHTML = `
                     <span style="margin-right: 15px;">Bem-vindo, <strong>${nome}</strong>!</span>
@@ -92,8 +91,8 @@
             } else {
                 menu.innerHTML = `
                     <a href="index.html">Página Inicial</a>
-                    <a href="contactos.html" class="ativo">Contactos</a>
-                    <a href="disciplinas.html">Explorar</a>
+                    <a href="contacts.html" class="ativo">Contactos</a>
+                    <a href="subjects.html">Explorar</a>
                 `;
                 areaAuth.innerHTML = `
                     <a href="registo.html" class="btn-topo">Registar</a>

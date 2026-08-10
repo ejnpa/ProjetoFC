@@ -13,7 +13,7 @@
 
         <div id="mensagem-erro" style="color: red; font-size: 13px; margin-bottom: 10px;"></div>
 
-        <form id="form-registo">
+        <form id="form-register">
             <input type="text" id="nome" name="nome" placeholder="Nome Completo" required>
             <input type="email" id="email" name="email" placeholder="Email" required>
             <input type="password" id="password" name="password" placeholder="Palavra-Passe" required>
@@ -29,7 +29,7 @@
     <script>
         const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
-        document.getElementById('form-registo').addEventListener('submit', async (evento) => {
+        document.getElementById('form-register').addEventListener('submit', async (evento) => {
             evento.preventDefault();
 
             const username = document.getElementById('nome').value;
@@ -45,7 +45,7 @@
             }
 
             try {
-                const resposta = await fetch(`${API_BASE_URL}/auth/registo`, {
+                const resposta = await fetch(`${API_BASE_URL}/auth/register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

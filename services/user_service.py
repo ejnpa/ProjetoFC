@@ -15,7 +15,7 @@ class UsersService:
         user_data = {
             "username": username,
             "email":    email,
-            "passwoed": hashed_password
+            "password": hashed_password
         }
         return self.repo.create(user_data)
     

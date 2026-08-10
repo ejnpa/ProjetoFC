@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial - exe.cuTIve</title>
+    <title>Página Inicial - exe.cuTIva</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -12,12 +12,12 @@
 
     <header class="topo">
         <div class="logo">
-            <img src="images/logo.png" alt="exe.cuTIve">
+            <img src="images/logo.png" alt="exe.cuTIva">
         </div>
         <nav class="menu" id="menu-principal">
             <a href="index.html" class="ativo">Página Inicial</a>
-            <a href="contactos.html">Contactos</a>
-            <a href="disciplinas.html">Explorar</a>
+            <a href="contacts.html">Contactos</a>
+            <a href="subjects.html">Explorar</a>
         </nav>
         <div class="topo-botoes" id="area-autenticacao"></div>
     </header>
@@ -47,13 +47,13 @@
         <div class="card azul">
             <h2>Pesquisa por Disciplinas</h2>
             <p>Encontra apontamentos por cadeira, curso ou tema de forma rápida e prática.</p>
-            <a href="disciplinas.html">CLIQUE AQUI →</a>
+            <a href="subjects.html">CLIQUE AQUI →</a>
         </div>
 
         <div class="card azul">
             <h2>Partilha com Colegas</h2>
             <p>Disponibiliza os teus materiais e ajuda outros estudantes na aprendizagem.</p>
-            <a href="disciplinas.html">CLIQUE AQUI →</a>
+            <a href="subjects.html">CLIQUE AQUI →</a>
         </div>
 
         <div class="card azul">
@@ -81,7 +81,7 @@
             if (token && nome) {
                 menu.innerHTML += `
                     <a href="upload.html">Upload</a>
-                    <a href="meusApontamentos.html">Meus Apontamentos</a>
+                    <a href="myNotes.html">Meus Apontamentos</a>
                 `;
                 areaAuth.innerHTML = `
                     <span style="margin-right: 15px;">Bem-vindo, <strong>${nome}</strong>!</span>
@@ -89,7 +89,7 @@
                 `;
             } else {
                 areaAuth.innerHTML = `
-                    <a href="registo.html" class="btn-topo">Registar</a>
+                    <a href="register.html" class="btn-topo">Registar</a>
                     <a href="login.html" class="btn-login-topo">Entrar</a>
                 `;
             }

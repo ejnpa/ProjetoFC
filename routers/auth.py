@@ -7,7 +7,7 @@ from pydantic import BaseModel, EmailStr
 from database import get_db
 from repositories.users_repository import UsersRepository
 from services.user_service import UsersService
-
+from security import get_password_hash
 
 router = APIRouter(
     prefix="/api/auth",
@@ -26,8 +26,10 @@ class UserCreate(BaseModel):
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register_user(user: UserCreate, service:UsersService = Depends(get_users_service)):
+   
+    hashed_password = get_password_hash(user.password)
     new_user = service.register_new_user(user.username, user.email, user.password)
-    
+   
     if not new_user:
         raise HTTPException(
             status_code = status.HTTP_400_BAD_REQUEST,
@@ -37,11 +39,11 @@ def register_user(user: UserCreate, service:UsersService = Depends(get_users_ser
     
         
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), service:UsersService = Depends(get_db) ):    
+def login(form_data: OAuth2PasswordRequestForm = Depends(), service:UsersService = Depends(get_users_service) ):    
     
     token = service.authenticate_user(form_data.username, form_data.password)
     if not token:
-        raise HTTPException(status_code = 400, details = "Credenciais de acesso inválidas")
+        raise HTTPException(status_code = 400, detail = "Credenciais de acesso inválidas")
     return {"access_token": token, "token_type": "bearer"}
 
 

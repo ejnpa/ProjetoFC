@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     window.dados_escola_global = {};
 
     try {
-        const_response = await fetch('http://127.0.0.1:8000/api//notes/structure');
+        const response = await fetch('http://127.0.0.1:8000/api/notes/structure');
         if (response.ok) {
             window.dados_escola_global = await response.json();
             Object.keys(window.dados_escola_global).forEach(escola => {
                 const op = document.createElement('option');
                 op.value = escola; 
                 op.textContent = escola;
-                selectCurso.appendChild(op);
+                selectEscola.appendChild(op);
         });
         }
     }catch (error) {
