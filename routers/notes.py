@@ -8,6 +8,7 @@ from models import Users
 from security import get_current_user
 from repositories.notes_repository import NotesRepository
 from services.notes_service import NotesService
+from services.ai_accessibility_service import AIAccessibilityService
 from utils import load_structure
 
 
@@ -90,7 +91,20 @@ def delete_note(note_id:str, service: NotesService = Depends(get_notes_service),
     service.delete_note(note_id, current_user.email)
     return {"message": "Apontamento apagado com sucesso"}
 
-
+@router.get("/{note_id}/adapt")
+def adapt_note(note_id:str, service: NotesService = Depends(get_notes_service),current_user: Users = Depends(get_current_user)):
+    """Extrai o texto do ficheiro e envia para a IA formatar."""
+    note_data= service.read_note_content(note_id)
+    
+    if not note_data:
+        raise HTTPException(status_code=404, detail="Apontamento não encontrado")
+    
+    ai_service = AIAccessibilityService()
+    adapted_text = ai_service.adapt_text(note_data["content"])
+    
+    return {"id": note_data["id"],
+            "title": note_data["title"],
+            "adapted_content": adapted_text}
 
 
 
