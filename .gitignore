@@ -16,3 +16,5 @@ azurite_db*.json
 .vscode/
 .idea/
 .DS_Store
+azurite_data/
+ollama_models/
