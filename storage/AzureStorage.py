@@ -4,11 +4,16 @@ from .IStorage import StorageInterface
 
 class AzureStorage(StorageInterface):
     def __init__(self):
-        connection_string = os.getenv("STORAGE_STORAGE_CONNECTION_STRING", "UseDevelopmentStorage=true")
-        self.container_name =  "notes"
-        self.blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+        
+        ip_desktop="100.89.13.43"
+        
+        connection_string = f"DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://{ip_desktop}:10000/devstoreaccount1;"
+        
+        self.container_name =  "public-notes"
+        self.blob_service_client = BlobServiceClient.from_connection_string(connection_string, api_version="2023-11-03")
         try:
-            self.container_client = self.blob_service_client.create_container(self.container_name)
+            self.container_client = self.blob_service_client.create_container(self.container_name,
+                                                                              public_access="blob")
         except Exception:
             self.container_client = self.blob_service_client.get_container_client(self.container_name) 
             

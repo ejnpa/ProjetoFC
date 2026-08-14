@@ -10,7 +10,13 @@ class NotesService:
         self.repo = repo
         self.storage = get_storage_provider()
     
-    def process_upload(self, title: str, subject: str, file: UploadFile, author_email: str):
+    def process_upload(self, title: str,
+                       school: str,
+                       course: str,
+                       year: str,
+                       subject: str,
+                       file: UploadFile,
+                       author_email: str):
         file_bytes = file.file.read()
         new_id = str(uuid.uuid4())
         safe_filename = f"{new_id}_{file.filename.replace(' ', '_')}"
@@ -22,6 +28,9 @@ class NotesService:
         note_metadata = {
             "id": new_id,
             "title": title,
+            "school": school,
+            "course": course,
+            "year":year,
             "subject": subject,
             "author": author_email,
             "file_url": file_url,

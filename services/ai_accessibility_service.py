@@ -4,7 +4,10 @@ import json
 
 class AIAccessibilityService:
     def __init__(self, api_key):
-        self.api_key = os.getenv("AI_ACCESSIBILITY_API_KEY", api_key)
-        self.model = "gemini-3-flash-16k"  # modelo a usar
-        self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent" # URL da API
+        base_url = os.getenv("OLLAMA_BASE_URL", "http://100.89.13.43:11434")
+        self.ollama_url = f"{base_url}/api/generate"
+        self.model = "llama3"  # modelo a usar
         
+        
+        
+                   
