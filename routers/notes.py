@@ -46,7 +46,7 @@ def upload_file(
     service: NotesService = Depends(get_notes_service),
     current_user: Users = Depends(get_current_user)
 ):
-    note = service.process_upload(title, subject, file, current_user.email)
+    note = service.process_upload(title, school, course, year, subject, file, current_user.email)
     return {"message": "Upload completo!", "note": note}
 
 
