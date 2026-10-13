@@ -1,67 +1,102 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - exe.cuTIva</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — exe.cuTIva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="login-page">
+<body class="app-page auth-page">
+  <header class="home-header">
+        <div class="header-start">
+            <button class="hamburger-button" id="hamburger-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="side-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a class="home-brand" href="index.html" aria-label="exe.cuTIva, página inicial">
+                <span class="brand-mark">e.</span><span>exe.cuTIva</span>
+            </a>
+        </div>
+        <nav class="home-nav" aria-label="Navegação principal">
+            <a href="subjects.html">Explorar</a>
+            <a href="index.html#como-funciona">Como funciona</a>
+            <a href="contacts.html">Contactos</a>
+        </nav>
+        <div class="header-actions">
+            <div class="language-picker">
+                <!-- Seletor de idiomas do index[cite: 1] -->
+                <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
+                    <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="language-menu" id="language-menu" role="menu">
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                </div>
+            </div>
+            <!-- É fundamental que o ID aqui seja o mesmo que usas no auth.js -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html">Entrar</a>
+                <a class="home-signup" href="register.html">Criar conta</a>
+            </div>
+        </div>
+    </header>
+    <div class="menu-backdrop" id="menu-backdrop"></div>
+    <aside class="side-menu" id="side-menu" aria-label="Menu principal">
+        <div class="side-menu-top">
+            <span class="side-menu-title">Menu</span>
+            <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
+        </div>
+        <nav class="side-menu-links">
+            <a href="index.html"><span class="side-menu-icon">🏠</span> Página inicial</a>
+            <a href="subjects.html"><span class="side-menu-icon">📚</span> Explorar materiais</a>
+            <a href="upload.html"><span class="side-menu-icon">⬆️</span> Partilhar apontamentos</a>
+            <a href="myNotes.html"><span class="side-menu-icon">📂</span> Os meus apontamentos</a>
+            <a href="contacts.html"><span class="side-menu-icon">✉️</span> Contactos</a>
+        </nav>
+        <div class="side-menu-bottom">
+            <p>Aprende. Partilha. Cresce.</p>
+            <a href="register.html">Criar conta gratuita <span>→</span></a>
+        </div>
+    </aside>
+  <main class="auth-main"><section class="auth-card">
+    <p class="app-eyebrow">Bem-vindo de volta</p><h1>Entra e continua<br>a aprender.</h1>
+    <p class="auth-intro">Acede aos teus apontamentos e materiais de estudo.</p>
+    <p id="mensagem-erro" class="form-message" role="alert"></p>
+    <form id="form-login" class="app-form">
+      <label for="email">Email</label><input id="email" type="email" autocomplete="email" placeholder="nome@exemplo.pt" required>
+      <label for="password">Palavra-passe</label><input id="password" type="password" autocomplete="current-password" placeholder="A tua palavra-passe" required>
+      <button class="app-primary-button" type="submit">Entrar <span>→</span></button>
+    </form>
+    <p class="auth-switch">Ainda não tens conta? <a href="register.html">Cria a tua conta</a></p>
+  </section></main>
+  <footer class="home-footer">
+        <a class="home-brand" href="index.html">
+            <span class="brand-mark">e.</span><span>exe.cuTIva</span>
+        </a>
+        <p>Estudar melhor começa por partilhar.</p>
+        <small>© 2026 exe.cuTIva</small>
+  </footer>
 
-    <div class="login-box">
-        <h1>Login</h1>
-
-        <div id="mensagem-erro" style="color: red; font-size: 13px; margin-bottom: 10px;"></div>
-
-        <form id="form-login">
-            <input type="email" id="email" name="email" placeholder="Email" required><br><br>
-            <input type="password" id="password" name="password" placeholder="Palavra-passe" required><br><br>
-
-            <button type="submit" class="btn-login">Entrar</button>
-        </form>
-
-        <p>Ainda não tem uma conta? <a href="register.html">Faça registo aqui</a></p>
-        <a href="index.html" class="btn-voltar">Voltar para a Página Inicial</a>
-    </div>
-
-    <script>
-        const API_BASE_URL = 'http://127.0.0.1:8000/api';
-
-        document.getElementById('form-login').addEventListener('submit', async (evento) => {
-            evento.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const divErro = document.getElementById('mensagem-erro');
-            divErro.innerText = "";
-
-            const formData = new URLSearchParams();
-            formData.append('username', email);
-            formData.append('password', password);
-
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: formData
-                });
-
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    localStorage.setItem('token', dados.access_token);
-                    localStorage.setItem('utilizador_nome', email.split('@')[0]);
-                    window.location.href = 'index.html';
-                } else {
-                    divErro.innerText = dados.detail || "Email ou palavra-passe incorretos.";
-                }
-            } catch (erro) {
-                console.error("Erro:", erro);
-                divErro.innerText = "Erro ao comunicar com o servidor.";
-            }
-        });
-    </script>
+  <script src="js/config.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/UI.js"></script>
+  
+  <script src="js/auth.js"></script>
+  
+  <script>
+    document.getElementById('form-login').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('mensagem-erro');
+      message.textContent = '';
+      const formData = new URLSearchParams({ username: email.value, password: password.value });
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, { method: 'POST', body: formData, credentials: 'include' });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'Email ou palavra-passe incorretos.');
+        localStorage.setItem('user', data.username);
+        window.location.href = 'index.html';
+      } catch (error) { showAlerts(error.message, 'erro') }
+    });
+  </script>
 </body>
 </html>

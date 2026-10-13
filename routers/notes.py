@@ -1,24 +1,16 @@
 
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
-from fastapi.responses import Response
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Response
 from sqlalchemy.orm import Session
-
-from database import get_db
-from models import Users
+from dependencies import get_notes_service
 from security import get_current_user
-from repositories.notes_repository import NotesRepository
 from services.notes_service import NotesService
 from services.ai_accessibility_service import AIAccessibilityService
-from utils import load_structure
+from processors.pdf_generator import create_acessability_pdf
+from core.config_loader import load_structure
+from models import Users
 
 
-router = APIRouter(
-    prefix="/api/notes",
-    tags=["Notes"]
-)
-def get_notes_service(db:Session = Depends(get_db))->NotesService:
-    repo = NotesRepository(db)
-    return NotesService(repo)
+router = APIRouter(prefix="/api/notes", tags=["Notes"])
 
 @router.get("/structure")
 def get_structure():
@@ -46,8 +38,8 @@ def upload_file(
     service: NotesService = Depends(get_notes_service),
     current_user: Users = Depends(get_current_user)
 ):
-    note = service.process_upload(title, school, course, year, subject, file, current_user.email)
-    return {"message": "Upload completo!", "note": note}
+    service.process_upload(title, school, course, year, subject, file, current_user.email)
+    return {"message": "Upload completo!"}
 
 
 @router.get("/{note_id}/read")
@@ -71,7 +63,8 @@ def get_note_details(note_id:str, service: NotesService = Depends(get_notes_serv
     return note
 
 @router.get("/{note_id}/download")
-def download_note_file(note_id:str, service: NotesService = Depends(get_current_user)):
+def download_note_file(note_id:str, service: NotesService = Depends(get_notes_service),
+                       current_user: Users = Depends(get_current_user)):
     """Vai buscar o ficheiro à Cloud e injeta-o na resposta como um anexo transferível."""
     data = service.prepare_download(note_id)
     if not data:
@@ -102,9 +95,10 @@ def adapt_note(note_id:str, service: NotesService = Depends(get_notes_service),c
     ai_service = AIAccessibilityService()
     adapted_text = ai_service.adapt_text(note_data["content"])
     
-    return {"id": note_data["id"],
-            "title": note_data["title"],
-            "adapted_content": adapted_text}
+    pdf_bytes = create_acessability_pdf(note_data["title"], adapted_text)
+    
+    return Response (content = pdf_bytes,
+                     media_type = "application/pdf")
 
 
 

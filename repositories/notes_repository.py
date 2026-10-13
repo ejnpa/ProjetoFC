@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Notes
+from models.notes import Notes
 
 class NotesRepository:
     
@@ -22,15 +22,14 @@ class NotesRepository:
     def get_by_author(self, author_email: str):
         return self.db.query(Notes).filter(Notes.author == author_email).all()
     
-    def delete(self, notes:Notes):
-        self.db.delete(notes)
-        self.db.commit()
-    
-    def get_all_with_filters(self, school:str=None, course:str=None, year:str=None, discipline:str=None):
-        """
-        Pesquisa na Base de Dados aplicando apenas os filtros que o utilizador escolheu.
-        A filtragem acontece ao nível do SQL para máxima performance.
-        """   
+    def delete(self, note_id:str):
+        note_to_delete = self.db.query(Notes).filter(Notes.id == note_id).first()
+        if note_to_delete:
+            self.db.delete(note_to_delete)
+            self.db.commit()
+            
+    def get_all_with_filters(self, school:str=None, course:str=None, year:str=None, subject:str=None):
+         
         query = self.db.query(Notes)
         
         if school and school != "Todas":
@@ -39,7 +38,7 @@ class NotesRepository:
             query = query.filter(Notes.course == course)
         if year and year != "Todos":
             query = query.filter(Notes.year == year)
-        if discipline and discipline != "Todas":
-            query = query.filter(Notes.discipline == discipline)
+        if subject and subject != "Todas":
+            query = query.filter(Notes.subject == subject)
         return query.all()
         

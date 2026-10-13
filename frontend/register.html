@@ -1,71 +1,98 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registar - exe.cuTIve</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar conta — exe.cuTIva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="login-page">
+<body class="app-page auth-page">
+  <header class="home-header">
+        <div class="header-start">
+            <button class="hamburger-button" id="hamburger-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="side-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a class="home-brand" href="index.html" aria-label="exe.cuTIva, página inicial">
+                <span class="brand-mark">e.</span><span>exe.cuTIva</span>
+            </a>
+        </div>
+        <nav class="home-nav" aria-label="Navegação principal">
+            <a href="subjects.html">Explorar</a>
+            <a href="index.html#como-funciona">Como funciona</a>
+            <a href="contacts.html">Contactos</a>
+        </nav>
+        <div class="header-actions">
+            <div class="language-picker">
+                <!-- Seletor de idiomas do index[cite: 1] -->
+                <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
+                    <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="language-menu" id="language-menu" role="menu">
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                </div>
+            </div>
+            <!-- É fundamental que o ID aqui seja o mesmo que usas no auth.js -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html">Entrar</a>
+                <a class="home-signup" href="register.html">Criar conta</a>
+            </div>
+        </div>
+    </header>
 
-    <div class="login-box">
-        <h1>Registar</h1>
+    <!-- Menu Lateral Universal[cite: 1] -->
+    <div class="menu-backdrop" id="menu-backdrop"></div>
+    <aside class="side-menu" id="side-menu" aria-label="Menu principal">
+        <div class="side-menu-top">
+            <span class="side-menu-title">Menu</span>
+            <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
+        </div>
+        <nav class="side-menu-links">
+            <a href="index.html"><span class="side-menu-icon">🏠</span> Página inicial</a>
+            <a href="subjects.html"><span class="side-menu-icon">📚</span> Explorar materiais</a>
+            <a href="upload.html"><span class="side-menu-icon">⬆️</span> Partilhar apontamentos</a>
+            <a href="myNotes.html"><span class="side-menu-icon">📂</span> Os meus apontamentos</a>
+            <a href="contacts.html"><span class="side-menu-icon">✉️</span> Contactos</a>
+        </nav>
+        <div class="side-menu-bottom">
+            <p>Aprende. Partilha. Cresce.</p>
+            <a href="register.html">Criar conta gratuita <span>→</span></a>
+        </div>
+    </aside>
+    <p class="app-eyebrow">Começa hoje</p><h1>Cria a tua conta.</h1>
+    <p class="auth-intro">Partilha, descobre e organiza os teus melhores materiais de estudo.</p>
+    <p id="mensagem-erro" class="form-message" role="alert"></p>
+    <form id="form-register" class="app-form">
+      <label for="nome">Nome completo</label><input id="nome" type="text" autocomplete="name" required>
+      <label for="email">Email</label><input id="email" type="email" autocomplete="email" required>
+      <label for="password">Palavra-passe</label><input id="password" type="password" autocomplete="new-password" required>
+      <label for="confirm_password">Confirmar palavra-passe</label><input id="confirm_password" type="password" autocomplete="new-password" required>
+      <button class="app-primary-button" type="submit">Criar conta <span>→</span></button>
+    </form>
+    <p class="auth-switch">Já tens conta? <a href="login.html">Inicia sessão</a></p>
+  </section></main>
 
-        <div id="mensagem-erro" style="color: red; font-size: 13px; margin-bottom: 10px;"></div>
-
-        <form id="form-register">
-            <input type="text" id="nome" name="nome" placeholder="Nome Completo" required>
-            <input type="email" id="email" name="email" placeholder="Email" required>
-            <input type="password" id="password" name="password" placeholder="Palavra-Passe" required>
-            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar Palavra-Passe" required>
-
-            <button type="submit" class="btn-login">Criar Conta</button>
-        </form>
-
-        <p>Já tem uma conta? <a href="login.html">Faça login aqui</a></p>
-        <a href="index.html" class="btn-voltar">Voltar para a Página Inicial</a>
-    </div>
-
-    <script>
-        const API_BASE_URL = 'http://127.0.0.1:8000/api';
-
-        document.getElementById('form-register').addEventListener('submit', async (evento) => {
-            evento.preventDefault();
-
-            const username = document.getElementById('nome').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            const divErro = document.getElementById('mensagem-erro');
-            divErro.innerText = "";
-
-            if (password !== confirmPassword) {
-                divErro.innerText = "As palavras-passe não coincidem.";
-                return;
-            }
-
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, email, password })
-                });
-
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    alert("Conta criada com sucesso! Faça login.");
-                    window.location.href = 'login.html';
-                } else {
-                    divErro.innerText = dados.detail || "Erro ao criar conta.";
-                }
-            } catch (erro) {
-                console.error("Erro:", erro);
-                divErro.innerText = "Erro ao comunicar com o servidor.";
-            }
-        });
-    </script>
+    <script src="js/config.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/UI.js"></script>
+    
+    <script src="js/auth.js"></script>
+    <script src="js/notes.js"></script>
+    
+  <script>
+    document.getElementById('form-register').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = document.getElementById('mensagem-erro');
+      message.textContent = '';
+      if (password.value !== confirm_password.value) { message.textContent = 'As palavras-passe não coincidem.'; return; }
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: nome.value, email: email.value, password: password.value }) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'Não foi possível criar a conta.');
+        window.location.href = 'login.html';
+      } catch (error) { message.textContent = error.message; }
+    });
+  </script>
 </body>
 </html>
