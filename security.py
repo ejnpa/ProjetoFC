@@ -2,15 +2,15 @@ from datetime import datetime, timedelta, timezone
 import os
 from passlib.context import CryptContext
 from jose import jwt,JWTError
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Users
-from repositories.users_repository import UsersRepository 
+from config import settings
 
-SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
-algorithm = "HS256"
+SECRET_KEY = settings.secret_key
+ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60*24  # 1 day
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -28,19 +28,23 @@ def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=algorithm)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+def get_token_from_cookie(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="É necessário efetuar login.")
+    return token
 
-
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(get_token_from_cookie), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Não foi possivel validar credenciais",
-        headers={"WWW-Authenticate": "Bearer"},
+        detail="Não foi possivel validar credenciais"
         )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[algorithm])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
@@ -51,3 +55,4 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
+

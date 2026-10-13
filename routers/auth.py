@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status , Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
-
 
 from database import get_db
 from repositories.users_repository import UsersRepository
@@ -27,7 +26,6 @@ class UserCreate(BaseModel):
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register_user(user: UserCreate, service:UsersService = Depends(get_users_service)):
    
-    hashed_password = get_password_hash(user.password)
     new_user = service.register_new_user(user.username, user.email, user.password)
    
     if not new_user:
@@ -39,11 +37,31 @@ def register_user(user: UserCreate, service:UsersService = Depends(get_users_ser
     
         
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), service:UsersService = Depends(get_users_service) ):    
-    
+def login(response: Response = None,
+          form_data: OAuth2PasswordRequestForm = Depends(),
+          service:UsersService = Depends(get_users_service),
+          
+):
     token = service.authenticate_user(form_data.username, form_data.password)
+    
     if not token:
-        raise HTTPException(status_code = 400, detail = "Credenciais de acesso inválidas")
-    return {"access_token": token, "token_type": "bearer"}
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email ou password inválidos",
+        )
+    
+    response.set_cookie (
+        key = "access_token",
+        value = token,
+        httponly = True,
+        samesite = "lax",
+        secure = False,  # Definir como True se usar HTTPS
+        max_age = 60*60*24  # 1 dia
+    )
+    
+    return {"message": "Login efetuado com sucesso", "username": form_data.username}
 
-
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(key = "access_token")
+    return {"message": "Sessão terminada"}

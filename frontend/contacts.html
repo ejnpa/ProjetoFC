@@ -1,111 +1,93 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contactos - exe.cuTIva</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contactos — exe.cuTIva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <header class="topo">
-        <div class="logo">
-            <img src="images/logo.png" alt="exe.cuTIva">
+<body class="app-page form-page">
+  <header class="home-header">
+        <div class="header-start">
+            <button class="hamburger-button" id="hamburger-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="side-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a class="home-brand" href="index.html" aria-label="exe.cuTIva, página inicial">
+                <span class="brand-mark">e.</span><span>exe.cuTIva</span>
+            </a>
         </div>
-        <nav class="menu" id="menu-principal">
-            <a href="index.html">Página Inicial</a>
-            <a href="contacts.html" class="ativo">Contactos</a>
+        <nav class="home-nav" aria-label="Navegação principal">
             <a href="subjects.html">Explorar</a>
+            <a href="index.html#como-funciona">Como funciona</a>
+            <a href="contacts.html">Contactos</a>
         </nav>
-        <div class="topo-botoes" id="area-autenticacao"></div>
+        <div class="header-actions">
+            <div class="language-picker">
+                <!-- Seletor de idiomas do index[cite: 1] -->
+                <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
+                    <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="language-menu" id="language-menu" role="menu">
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                </div>
+            </div>
+            <!-- É fundamental que o ID aqui seja o mesmo que usas no auth.js -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html">Entrar</a>
+                <a class="home-signup" href="register.html">Criar conta</a>
+            </div>
+        </div>
     </header>
 
-    <section class="upload-container">
-       <div class="upload-box box-contactos">
-            <h2>Falar com a Equipa</h2>
-            <p>Tens alguma dúvida, sugestão ou encontraste um problema? Envia-nos uma mensagem!</p>
-
-            <form id="form-contacto">
-                <label class="rotulo-form">Nome Completo</label>
-                <input type="text" id="nome-contacto" name="nome" required>
-
-                <label class="rotulo-form">Email de Contacto</label>
-                <input type="email" id="email-contacto" name="email" required>
-
-                <label class="rotulo-form">Assunto</label>
-                <select name="assunto" required>
-                    <option value="" disabled selected>Escolhe um assunto...</option>
-                    <option value="Duvida">Dúvida sobre a plataforma</option>
-                    <option value="Problema Técnico">Reportar um erro/problema técnico</option>
-                    <option value="Sugestão">Ideia ou Sugestão</option>
-                    <option value="Outro">Outro assunto</option>
-                </select>
-
-                <label class="rotulo-form">A tua mensagem</label>
-                <textarea name="mensagem" rows="5" required></textarea>
-
-                <button type="submit" class="btn-envio-contacto">
-                    Enviar Mensagem
-                </button>
-            </form>
+    <!-- Menu Lateral Universal[cite: 1] -->
+    <div class="menu-backdrop" id="menu-backdrop"></div>
+    <aside class="side-menu" id="side-menu" aria-label="Menu principal">
+        <div class="side-menu-top">
+            <span class="side-menu-title">Menu</span>
+            <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
         </div>
-    </section>
-
-    <footer class="footer">
-        <p>© 2026 exe.cuTIva - Plataforma de Partilha de Apontamentos Académicos</p>
-    </footer>
-
+        <nav class="side-menu-links">
+            <a href="index.html"><span class="side-menu-icon">🏠</span> Página inicial</a>
+            <a href="subjects.html"><span class="side-menu-icon">📚</span> Explorar materiais</a>
+            <a href="upload.html"><span class="side-menu-icon">⬆️</span> Partilhar apontamentos</a>
+            <a href="myNotes.html"><span class="side-menu-icon">📂</span> Os meus apontamentos</a>
+            <a href="contacts.html"><span class="side-menu-icon">✉️</span> Contactos</a>
+        </nav>
+        <div class="side-menu-bottom">
+            <p>Aprende. Partilha. Cresce.</p>
+            <a href="register.html">Criar conta gratuita <span>→</span></a>
+        </div>
+    </aside>
+  <main class="upload-container"><section class="upload-box box-contactos">
+    <p class="app-eyebrow">Estamos por perto</p><h1>Falar com a equipa</h1><p>Tens uma dúvida, sugestão ou problema? Envia-nos uma mensagem.</p>
+    <form id="form-contacto" class="app-form">
+      <label for="nome-contacto">Nome completo</label><input id="nome-contacto" type="text" required>
+      <label for="email-contacto">Email</label><input id="email-contacto" type="email" required>
+      <label for="assunto">Assunto</label><select id="assunto" required><option value="">Escolhe um assunto…</option><option>Dúvida sobre a plataforma</option><option>Reportar problema técnico</option><option>Ideia ou sugestão</option><option>Outro</option></select>
+      <label for="mensagem">Mensagem</label><textarea id="mensagem" rows="6" required></textarea>
+      <button class="app-primary-button" type="submit">Enviar mensagem <span>→</span></button>
+    </form>
+  </section></main>
+    <footer class="app-footer"><a class="app-brand" href="index.html"><span>e.</span>exe.cuTIva</a><p>Estudar melhor começa por partilhar.</p><small>© 2026 exe.cuTIva</small></footer>
+    
+    <script src="js/config.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/UI.js"></script>
+    <script src="js/auth.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            verificarAutenticacao();
-            
-            const nome = localStorage.getItem('utilizador_nome');
-            if (nome) {
-                document.getElementById('nome-contacto').value = nome;
-            }
-
-            document.getElementById('form-contacto').addEventListener('submit', (e) => {
-                e.preventDefault();
-                alert("Mensagem enviada com sucesso! Entraremos em contacto em breve.");
-                window.location.href = 'index.html';
-            });
-        });
-
-        function verificarAutenticacao() {
-            const token = localStorage.getItem('token');
-            const nome = localStorage.getItem('utilizador_nome');
-            const areaAuth = document.getElementById('area-autenticacao');
-            const menu = document.getElementById('menu-principal');
-
-            if (token && nome) {
-                menu.innerHTML = `
-                    <a href="index.html">Página Inicial</a>
-                    <a href="contacts.html" class="ativo">Contactos</a>
-                    <a href="subjects.html">Explorar</a>
-                    <a href="upload.html">Upload</a>
-                    <a href="myNotes.html">Meus Apontamentos</a>
-                `;
-                areaAuth.innerHTML = `
-                    <span style="margin-right: 15px;">Bem-vindo, <strong>${nome}</strong>!</span>
-                    <a href="#" onclick="fazerLogout()" class="btn-login-topo">Sair</a>
-                `;
-            } else {
-                menu.innerHTML = `
-                    <a href="index.html">Página Inicial</a>
-                    <a href="contacts.html" class="ativo">Contactos</a>
-                    <a href="subjects.html">Explorar</a>
-                `;
-                areaAuth.innerHTML = `
-                    <a href="registo.html" class="btn-topo">Registar</a>
-                    <a href="login.html" class="btn-login-topo">Entrar</a>
-                `;
-            }
-        }
-
-        function fazerLogout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('utilizador_nome');
-            window.location.reload();
-        }
-    </script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const user = getCurrentUser();
+        const nomeContacto = document.getElementById('nome-contacto');
+        if (user) nomeContacto.value = user;
+        document.getElementById('form-contacto').addEventListener('submit', event => { event.preventDefault();
+        showAlerts('Mensagem enviada com sucesso. Entraremos em contacto em breve.', 'sucesso');
+        event.currentTarget.reset(); 
+        if (user) nomeContacto.value = user; 
+    });
+});
+   
+  </script>
 </body>
 </html>

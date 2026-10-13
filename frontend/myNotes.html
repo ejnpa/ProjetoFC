@@ -1,146 +1,72 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Apontamentos - exe.cuTIve</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Os meus apontamentos — exe.cuTIva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-
-    <header class="topo">
-        <div class="logo">
-            <img src="images/logo.png" alt="exe.cuTIve">
+<body class="app-page notes-page" data-requires-auth="true">
+  <header class="home-header">
+        <div class="header-start">
+            <button class="hamburger-button" id="hamburger-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="side-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a class="home-brand" href="index.html" aria-label="exe.cuTIva, página inicial">
+                <span class="brand-mark">e.</span><span>exe.cuTIva</span>
+            </a>
         </div>
-        <nav class="menu" id="menu-principal">
-            <a href="index.html">Página Inicial</a>
-            <a href="contacts.html">Contactos</a>
+        <nav class="home-nav" aria-label="Navegação principal">
             <a href="subjects.html">Explorar</a>
+            <a href="index.html#como-funciona">Como funciona</a>
+            <a href="contacts.html">Contactos</a>
         </nav>
-        <div class="topo-botoes" id="area-autenticacao"></div>
+        <div class="header-actions">
+            <div class="language-picker">
+                <!-- Seletor de idiomas do index[cite: 1] -->
+                <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
+                    <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="language-menu" id="language-menu" role="menu">
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                </div>
+            </div>
+            <!-- É fundamental que o ID aqui seja o mesmo que usas no auth.js -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html">Entrar</a>
+                <a class="home-signup" href="register.html">Criar conta</a>
+            </div>
+        </div>
     </header>
 
-    <section class="lista-apontamentos">
-        <div class="barra-topo-apontamentos">
-            <h2>Os Meus Apontamentos</h2>
-            <a href="upload.html" class="btn-principal">Adicionar Novo</a>
+    <!-- Menu Lateral Universal[cite: 1] -->
+    <div class="menu-backdrop" id="menu-backdrop"></div>
+    <aside class="side-menu" id="side-menu" aria-label="Menu principal">
+        <div class="side-menu-top">
+            <span class="side-menu-title">Menu</span>
+            <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
         </div>
-
-        <div class="grelha-cards" id="grelha-meus-apontamentos">
-            <p>A carregar os teus apontamentos...</p>
+        <nav class="side-menu-links">
+            <a href="index.html"><span class="side-menu-icon">🏠</span> Página inicial</a>
+            <a href="subjects.html"><span class="side-menu-icon">📚</span> Explorar materiais</a>
+            <a href="upload.html"><span class="side-menu-icon">⬆️</span> Partilhar apontamentos</a>
+            <a href="myNotes.html"><span class="side-menu-icon">📂</span> Os meus apontamentos</a>
+            <a href="contacts.html"><span class="side-menu-icon">✉️</span> Contactos</a>
+        </nav>
+        <div class="side-menu-bottom">
+            <p>Aprende. Partilha. Cresce.</p>
+            <a href="register.html">Criar conta gratuita <span>→</span></a>
         </div>
-    </section>
-
-    <footer class="footer">
-        <p>© 2026 exe.cuTIva - Plataforma de Partilha de Apontamentos Académicos</p>
-    </footer>
-
-    <script>
-        const API_BASE_URL = 'http://127.0.0.1:8000/api';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            verificarAutenticacaoESeguir();
-        });
-
-        function verificarAutenticacaoESeguir() {
-            const token = localStorage.getItem('token');
-            const nome = localStorage.getItem('utilizador_nome');
-            const areaAuth = document.getElementById('area-autenticacao');
-            const menu = document.getElementById('menu-principal');
-
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            menu.innerHTML = `
-                <a href="index.html">Página Inicial</a>
-                <a href="contacts.html">Contactos</a>
-                <a href="subjects.html">Explorar</a>
-                <a href="upload.html">Upload</a>
-                <a href="myNotes.html" class="ativo">Meus Apontamentos</a>
-            `;
-            areaAuth.innerHTML = `
-                <span style="margin-right: 15px;">Bem-vindo, <strong>${nome}</strong>!</span>
-                <a href="#" onclick="fazerLogout()" class="btn-login-topo">Sair</a>
-            `;
-
-            carregarMeusApontamentos(token);
-        }
-
-        function fazerLogout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('utilizador_nome');
-            window.location.reload();
-        }
-
-        async function carregarMeusApontamentos(token) {
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/notes/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const apontamentos = await resposta.json();
-                const grelha = document.getElementById('grelha-meus-apontamentos');
-                grelha.innerHTML = '';
-
-                if (apontamentos.length === 0) {
-                    grelha.innerHTML = `
-                        <div class="mensagem-vazia">
-                            <p>Ainda não carregaste nenhum apontamento.</p>
-                            <a href="upload.html">Começar agora →</a>
-                        </div>
-                    `;
-                    return;
-                }
-
-                apontamentos.forEach(nota => {
-                    const cartao = `
-                        <div class="card-estudo">
-                            <div class="capa">
-                                <img src="${nota.thumbnail_url || 'https://via.placeholder.com/300x180?text=PDF'}" alt="Capa">
-                            </div>
-                            <div class="info">
-                                <h3>${nota.title}</h3>
-                                <span class="tag">${nota.discipline}</span>
-                                <p class="autor">👤 ${nota.autor}</p>
-                                <div class="acoes" style="display: flex; gap: 10px; margin-top: 10px;">
-                                    <a href="${nota.file_url}" target="_blank" class="btn-ver" style="padding: 6px 12px;">Ver Ficheiro</a>
-                                    <a href="leitor-inclusivo.html?id=${nota.id}" class="btn-ver" style="background-color: #FCC067; color: white; padding: 6px 12px;">🧠 Leitor Inclusivo</a>
-                                    <button onclick="apagarNota('${nota.id}')" class="btn-ver" style="background: #ffcdd2; color: #b71c1c; border:none; cursor:pointer; padding: 6px 12px;">🗑️ Apagar</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    grelha.innerHTML += cartao;
-                });
-            } catch (erro) {
-                console.error("Erro:", erro);
-                document.getElementById('grelha-meus-apontamentos').innerHTML = `<p style="color:red;">Erro ao carregar os teus apontamentos.</p>`;
-            }
-        }
-
-        async function apagarNota(id) {
-            if (!confirm("Tens a certeza que pretendes apagar este apontamento?")) return;
-            const token = localStorage.getItem('token');
-            try {
-                const resposta = await fetch(`${API_BASE_URL}/notes/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (resposta.ok) {
-                    carregarMeusApontamentos(token);
-                } else {
-                    alert("Erro ao apagar apontamento.");
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Erro de comunicação com o servidor.");
-            }
-        }
-    </script>
+    </aside>
+  <main class="lista-apontamentos"><div class="barra-topo-apontamentos"><div><p class="app-eyebrow">Área pessoal</p><h1>Os meus apontamentos</h1></div><a class="app-header-cta" href="upload.html">Partilhar material</a></div><div id="grelha-meus-apontamentos" class="grelha-cards"><p class="loading-state">A carregar apontamentos…</p></div></main>
+  <div id="modal-inclusivo" class="modal-overlay" hidden><div class="modal-content"><button type="button" class="btn-fechar" onclick="closeModal()">✕ Fechar</button><h2 id="modal-titulo">Leitor inclusivo</h2><article id="modal-texto" class="texto-phda"></article></div></div>
+  <footer class="app-footer"><a class="app-brand" href="index.html"><span>e.</span>exe.cuTIva</a><p>Estudar melhor começa por partilhar.</p><small>© 2026 exe.cuTIva</small></footer>
+  
+  <script src="js/config.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/UI.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/notes.js"></script>
 </body>
 </html>
