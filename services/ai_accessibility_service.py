@@ -26,7 +26,7 @@ class AIAccessibilityService:
                         },
                         {
                             "role": "user",
-                            "content" : "Aplica as regras dadas para adaptar e resumir o seguinte texto original:\n\n{short_text}"
+                            "content" : f"Texto original para resumires e adaptares:\n\"\"\"\n{short_text}\n\"\"\"\n\nProduz apenas o resumo adaptado, sem preâmbulos."
                         }
                     ]    
 

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer
+from sqlalchemy.orm import relationship
 from database import Base
 
 class Notes(Base):
@@ -12,4 +13,6 @@ class Notes(Base):
     author = Column(String)
     file_url = Column(String, nullable=True)
     thumbnail_url=Column(String, nullable=True)
+    
+    like_list = relationship("NoteLike", lazy = "joined")
     

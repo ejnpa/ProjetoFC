@@ -107,3 +107,33 @@ window.showAlerts = function(message, type = 'sucesso') {
         setTimeout(() => alert.remove(), 400);
     }, 4000);
 };
+
+window.toggleLike = async function (button, noteId) {
+
+
+    if (!localStorage.getItem('user')){
+        const msg = window.AppLanguage ? window.AppLanguage.get('erro-login-like'):'';
+        window.showAlerts(msg, 'erro');
+        return;
+    }
+
+    try{
+        const data = await notesService.toggleLike(noteId);
+        const countSpan = button.querySelector('.like-count');
+
+        if(data.liked){
+            button.classList.add('is-liked');
+        }else{
+            button.classList.remove('is-liked');
+        }
+
+        const newCount = data.likes_count !== 'undefined' ? data.likes_count : data.likes;
+        if (countSpan && newCount !== 'undefined') {
+            countSpan.textContent = newCount;
+        }
+    }catch(error){
+        console.error("Erro no toggleLike:", error);
+        const errMsg = window.AppLanguage?window.AppLanguage.get('erro-like'):'Erro de comunicação com o servidor.';
+        window.showAlerts(errMsg, 'erro');
+    }
+}

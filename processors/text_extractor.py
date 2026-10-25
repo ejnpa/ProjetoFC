@@ -15,12 +15,16 @@ except ImportError:
     
     
 def _extract_pdf(file_bytes: bytes) -> str:
-    if not pdfium:
-        return ""
-    file = pdfium.PdfDocument(file_bytes)
-    text = "".join(page.get_textpage().get_text_range() + "\n\n" for page in file)
-    file.close()
-    return text.strip()    
+    try:
+        if not pdfium:
+            return ""
+        file = pdfium.PdfDocument(file_bytes)
+        text = "".join(page.get_textpage().get_text_range() + "\n\n" for page in file)
+        file.close()
+        return text.strip()
+    except Exception as e:
+        print(f"[DEBUG EXTRACTOR ERRO] Falha ao ler PDF: {e}")
+        return ""    
 
 def _extract_docx(file_bytes: bytes) -> str:
     if not docx:
