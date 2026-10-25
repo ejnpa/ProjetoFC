@@ -39,8 +39,7 @@ def register_user(user: UserCreate, service:UsersService = Depends(get_users_ser
 @router.post("/login")
 def login(response: Response = None,
           form_data: OAuth2PasswordRequestForm = Depends(),
-          service:UsersService = Depends(get_users_service),
-          
+          service:UsersService = Depends(get_users_service)         
 ):
     token = service.authenticate_user(form_data.username, form_data.password)
     

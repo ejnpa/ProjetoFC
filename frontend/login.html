@@ -18,70 +18,87 @@
             </a>
         </div>
         <nav class="home-nav" aria-label="Navegação principal">
-            <a href="subjects.html">Explorar</a>
-            <a href="index.html#como-funciona">Como funciona</a>
-            <a href="contacts.html">Contactos</a>
+            <a href="subjects.html" data-i18n="menu-explorar">Explorar</a>
+            <a href="index.html#como-funciona" data-i18n="menu-como-funciona">Como funciona</a>
+            <a href="contacts.html" data-i18n="menu-contactos">Contactos</a>
         </nav>
-        <div class="header-actions">
+      <div class="header-actions">
+            <!-- 1. Área de Autenticação (Agora à esquerda) -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html" data-i18n="btn-entrar">Entrar</a>
+                <a class="home-signup" href="register.html" data-i18n="btn-criar-conta">Criar conta</a>
+            </div>
+
+            <!-- 2. Seletor de Idiomas (Agora na extrema direita com bandeiras) -->
             <div class="language-picker">
-                <!-- Seletor de idiomas do index[cite: 1] -->
                 <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
                     <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
                 </button>
                 <div class="language-menu" id="language-menu" role="menu">
-                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
-                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem">
+                        <div class="lang-info">
+                            <span class="lang-flag">🇵🇹</span>
+                            <span>Português</span>
+                        </div>
+                        <small>PT</small>
+                    </button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem">
+                        <div class="lang-info">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span>English</span>
+                        </div>
+                        <small>EN</small>
+                    </button>
                 </div>
-            </div>
-            <!-- É fundamental que o ID aqui seja o mesmo que usas no auth.js -->
-            <div class="home-auth" id="area-auth">
-                <a class="home-login" href="login.html">Entrar</a>
-                <a class="home-signup" href="register.html">Criar conta</a>
             </div>
         </div>
     </header>
+
     <div class="menu-backdrop" id="menu-backdrop"></div>
     <aside class="side-menu" id="side-menu" aria-label="Menu principal">
         <div class="side-menu-top">
-            <span class="side-menu-title">Menu</span>
+            <span class="side-menu-title" data-i18n="menu-titulo">Menu</span>
             <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
         </div>
         <nav class="side-menu-links">
-            <a href="index.html"><span class="side-menu-icon">🏠</span> Página inicial</a>
-            <a href="subjects.html"><span class="side-menu-icon">📚</span> Explorar materiais</a>
-            <a href="upload.html"><span class="side-menu-icon">⬆️</span> Partilhar apontamentos</a>
-            <a href="myNotes.html"><span class="side-menu-icon">📂</span> Os meus apontamentos</a>
-            <a href="contacts.html"><span class="side-menu-icon">✉️</span> Contactos</a>
+            <a href="index.html"><span class="side-menu-icon">🏠</span> <span data-i18n="menu-lateral-inicio">Página inicial</span></a>
+            <a href="subjects.html"><span class="side-menu-icon">📚</span> <span data-i18n="menu-lateral-explorar">Explorar materiais</span></a>
+            <a href="upload.html"><span class="side-menu-icon">⬆️</span> <span data-i18n="menu-lateral-partilhar">Partilhar apontamentos</span></a>
+            <a href="myNotes.html"><span class="side-menu-icon">📂</span> <span data-i18n="menu-lateral-meus">Os meus apontamentos</span></a>
+            <a href="contacts.html"><span class="side-menu-icon">✉️</span> <span data-i18n="menu-contactos">Contactos</span></a>
         </nav>
         <div class="side-menu-bottom">
-            <p>Aprende. Partilha. Cresce.</p>
-            <a href="register.html">Criar conta gratuita <span>→</span></a>
+            <p data-i18n="menu-slogan">Aprende. Partilha. Cresce.</p>
+            <a href="register.html"><span data-i18n="btn-conta-gratis">Criar conta gratuita</span> <span>→</span></a>
         </div>
     </aside>
+
   <main class="auth-main"><section class="auth-card">
-    <p class="app-eyebrow">Bem-vindo de volta</p><h1>Entra e continua<br>a aprender.</h1>
-    <p class="auth-intro">Acede aos teus apontamentos e materiais de estudo.</p>
+    <p class="app-eyebrow" data-i18n="login-eyebrow">Bem-vindo de volta</p>
+    <h1 data-i18n="login-title">Entra e continua<br>a aprender.</h1>
+    <p class="auth-intro" data-i18n="login-desc">Acede aos teus apontamentos e materiais de estudo.</p>
     <p id="mensagem-erro" class="form-message" role="alert"></p>
     <form id="form-login" class="app-form">
-      <label for="email">Email</label><input id="email" type="email" autocomplete="email" placeholder="nome@exemplo.pt" required>
-      <label for="password">Palavra-passe</label><input id="password" type="password" autocomplete="current-password" placeholder="A tua palavra-passe" required>
-      <button class="app-primary-button" type="submit">Entrar <span>→</span></button>
+      <label for="email" data-i18n="contact-email">Email</label><input id="email" type="email" autocomplete="email" placeholder="nome@exemplo.pt" required>
+      <label for="password" data-i18n="login-pass">Palavra-passe</label><input id="password" type="password" autocomplete="current-password" data-i18n="login-pass-placeholder" placeholder="A tua palavra-passe" required>
+      <button class="app-primary-button" type="submit"><span data-i18n="btn-entrar">Entrar</span> <span>→</span></button>
     </form>
-    <p class="auth-switch">Ainda não tens conta? <a href="register.html">Cria a tua conta</a></p>
+    <p class="auth-switch"><span data-i18n="login-no-account">Ainda não tens conta?</span> <a href="register.html" data-i18n="login-create-account">Cria a tua conta</a></p>
   </section></main>
+
   <footer class="home-footer">
         <a class="home-brand" href="index.html">
             <span class="brand-mark">e.</span><span>exe.cuTIva</span>
         </a>
-        <p>Estudar melhor começa por partilhar.</p>
+        <p data-i18n="footer-slogan">Estudar melhor começa por partilhar.</p>
         <small>© 2026 exe.cuTIva</small>
   </footer>
 
-  <script src="js/config.js"></script>
+  <script src="js/config.js?v=2"></script>
   <script src="js/language.js"></script>
   <script src="js/UI.js"></script>
-  
   <script src="js/auth.js"></script>
+  <script src="js/cascade.js"></script>
   
   <script>
     document.getElementById('form-login').addEventListener('submit', async (event) => {

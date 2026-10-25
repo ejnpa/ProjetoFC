@@ -1,13 +1,19 @@
 
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Response
 from sqlalchemy.orm import Session
-from dependencies import get_notes_service
+from dependencies import get_notes_service, get_audio_service
 from security import get_current_user
 from services.notes_service import NotesService
+from services.audio_service import AudioService
 from services.ai_accessibility_service import AIAccessibilityService
 from processors.pdf_generator import create_acessability_pdf
 from core.config_loader import load_structure
-from models import Users
+from models.users import Users
+from models.notes import Notes
+from models.note_like import NoteLike
+from database import get_db
+import os
+from fastapi.responses import StreamingResponse
 
 
 router = APIRouter(prefix="/api/notes", tags=["Notes"])
@@ -43,7 +49,11 @@ def upload_file(
 
 
 @router.get("/{note_id}/read")
-def read_note(note_id:str, service: NotesService = Depends(get_notes_service)):
+def read_note(
+    note_id:str, 
+    service: NotesService = Depends(get_notes_service), 
+    current_user: Users = Depends(get_current_user)
+):
     note_data = service.read_note_content(note_id)
     if not note_data:
         raise HTTPException(status_code=404, detail="Não encontrado")
@@ -101,4 +111,53 @@ def adapt_note(note_id:str, service: NotesService = Depends(get_notes_service),c
                      media_type = "application/pdf")
 
 
+@router.post("/{note_id}/like")
+def like_note(note_id: str, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    
+   
+    note = db.query(Notes).filter(Notes.id == note_id).first()
+    if not note:
+        raise HTTPException(status_code=404, detail='Apontamento não encontrado')
+    
+    existing_like = db.query(NoteLike).filter(
+        NoteLike.user_id == current_user.id,
+        NoteLike.note_id == note_id                                        
+    ).first()
+    
+   
+    if not existing_like:
+        new_like = NoteLike(user_id=current_user.id, note_id=note_id)
+        db.add(new_like)
+        db.commit() 
+        
+    return {"message": "Gosto adicionado!"}
 
+@router.delete("/{note_id}/like")
+def delete_like(note_id: str, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    
+    existing_like = db.query(NoteLike).filter(
+        NoteLike.user_id == current_user.id,
+        NoteLike.note_id == note_id                                        
+    ).first()
+    
+    
+    if existing_like:
+        db.delete(existing_like)
+        db.commit()
+        
+    return {"message": "Gosto removido!"}
+
+@router.get("/{note_id}/audio")
+async def get_note_audio(note_id:str, 
+                         service: NotesService = Depends(get_notes_service), 
+                         audio_service: AudioService = Depends(get_audio_service),
+                         current_user: Users =  Depends(get_current_user)
+):
+    note_data = service.read_note_content(note_id)
+    if not note_data or not note_data.get("content"):
+        raise HTTPException(status_code = 404, detail = "Apontamento não encontrado")
+    
+    return StreamingResponse(
+        audio_service.stream_audio(note_data["content"]),
+        media_type = "audio/mpeg"
+    )

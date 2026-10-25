@@ -17,25 +17,40 @@
             </a>
         </div>
         <nav class="home-nav" aria-label="Navegação principal">
-            
             <a href="subjects.html" data-i18n="menu-explorar">Explorar</a>
             <a href="index.html#como-funciona" data-i18n="menu-como-funciona">Como funciona</a>
             <a href="contacts.html" data-i18n="menu-contactos">Contactos</a>
         </nav>
         <div class="header-actions">
+            <!-- 1. Área de Autenticação -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html" data-i18n="btn-entrar">Entrar</a>
+                <a class="home-signup" href="register.html" data-i18n="btn-criar-conta">Criar conta</a>
+            </div>
+
+            <!-- 2. Seletor de Idiomas com Imagens Reais -->
             <div class="language-picker">
                 <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
                     <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
                 </button>
                 <div class="language-menu" id="language-menu" role="menu">
-                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
-                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem">
+                        <div class="lang-info">
+                            <!-- Imagem da bandeira PT -->
+                            <img src="https://flagcdn.com/pt.svg" alt="PT" class="lang-flag-img">
+                            <span>Português</span>
+                        </div>
+                        <small>PT</small>
+                    </button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem">
+                        <div class="lang-info">
+                            <!-- Imagem da bandeira UK -->
+                            <img src="https://flagcdn.com/gb.svg" alt="EN" class="lang-flag-img">
+                            <span>English</span>
+                        </div>
+                        <small>EN</small>
+                    </button>
                 </div>
-            </div>
-            <div class="home-auth" id="area-auth">
-                
-                <a class="home-login" href="login.html" data-i18n="btn-entrar">Entrar</a>
-                <a class="home-signup" href="register.html" data-i18n="btn-criar-conta">Criar conta</a>
             </div>
         </div>
     </header>
@@ -47,7 +62,6 @@
             <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
         </div>
         <nav class="side-menu-links">
-           
             <a href="index.html"><span class="side-menu-icon">🏠</span> <span data-i18n="menu-lateral-inicio">Página inicial</span></a>
             <a href="subjects.html"><span class="side-menu-icon">📚</span> <span data-i18n="menu-lateral-explorar">Explorar materiais</span></a>
             <a href="upload.html"><span class="side-menu-icon">⬆️</span> <span data-i18n="menu-lateral-partilhar">Partilhar apontamentos</span></a>
@@ -111,11 +125,13 @@
       <small>© 2026 exe.cuTIva</small>
   </footer>
 
-    <script src="js/config.js"></script>
-    <script src="js/language.js?v=3"></script>
-    <script src="js/UI.js?v=3"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/cascade.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/UI.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/services/notesService.js"></script>
+  <script src="js/services/structureService.js"></script>
+  <script src="js/cascade.js"></script>
 
   <script>
     document.getElementById('form-upload').addEventListener('submit', async event => {
@@ -166,9 +182,9 @@
               alert("Erro: " + error.message);
           }
       } finally {
-          
           button.disabled = false; 
-          button.innerHTML = 'Submeter apontamento <span>→</span>'; 
+          button.innerHTML = '<span data-i18n="btn-submeter">Submeter apontamento</span> <span>→</span>'; 
+          if (window.AppLanguage) window.AppLanguage.applyToHTML();
       }
     });
   </script>

@@ -1,0 +1,25 @@
+---
+- name : Deploy do ProjetoFC para o Desktop
+  hosts: desktop
+  gather_facts: no
+  tasks:
+    - name: Garantir que a pasta de destino existe
+      file: 
+        path: /home/emanuel/ProjetoFC
+        state: directory
+
+    - name: Sincronizar o código
+      ansible.posix.synchronize:
+        src: /mnt/c/Users/Emanuel/Desktop/ProjetoFC/
+        dest: /home/emanuel/ProjetoFC/
+        delete: yes
+        rsync_opts: 
+          - "--exclude=.git"
+          - "--exclude=__pycache__"
+          - "--exclude=.venv"
+          - "--exclude=node_modules"
+
+    - name: Reconstruir e levantar infraestrutura Docker
+      shell: docker compose up -d --build
+      args:
+        chdir: /home/emanuel/ProjetoFC/

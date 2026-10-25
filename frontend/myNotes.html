@@ -17,56 +17,125 @@
             </a>
         </div>
         <nav class="home-nav" aria-label="Navegação principal">
-            <a href="subjects.html">Explorar</a>
-            <a href="index.html#como-funciona">Como funciona</a>
-            <a href="contacts.html">Contactos</a>
+            <a href="subjects.html" data-i18n="menu-explorar">Explorar</a>
+            <a href="index.html#como-funciona" data-i18n="menu-como-funciona">Como funciona</a>
+            <a href="contacts.html" data-i18n="menu-contactos">Contactos</a>
         </nav>
         <div class="header-actions">
+            <!-- 1. Área de Autenticação (Agora à esquerda) -->
+            <div class="home-auth" id="area-auth">
+                <a class="home-login" href="login.html" data-i18n="btn-entrar">Entrar</a>
+                <a class="home-signup" href="register.html" data-i18n="btn-criar-conta">Criar conta</a>
+            </div>
+
+            <!-- 2. Seletor de Idiomas (Agora na extrema direita com bandeiras) -->
             <div class="language-picker">
-                <!-- Seletor de idiomas do index[cite: 1] -->
                 <button class="language-toggle" id="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu">
                     <span class="language-globe" aria-hidden="true">🌐</span><span id="selected-language">PT</span><span class="language-chevron" aria-hidden="true">▾</span>
                 </button>
                 <div class="language-menu" id="language-menu" role="menu">
-                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem"><span>Português</span><small>PT</small></button>
-                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem"><span>English</span><small>EN</small></button>
+                    <button type="button" class="language-option is-selected" data-language="pt-PT" data-label="PT" role="menuitem">
+                        <div class="lang-info">
+                            <span class="lang-flag">🇵🇹</span>
+                            <span>Português</span>
+                        </div>
+                        <small>PT</small>
+                    </button>
+                    <button type="button" class="language-option" data-language="en" data-label="EN" role="menuitem">
+                        <div class="lang-info">
+                            <span class="lang-flag">🇬🇧</span>
+                            <span>English</span>
+                        </div>
+                        <small>EN</small>
+                    </button>
                 </div>
-            </div>
-            <!-- É fundamental que o ID aqui seja o mesmo que usas no auth.js -->
-            <div class="home-auth" id="area-auth">
-                <a class="home-login" href="login.html">Entrar</a>
-                <a class="home-signup" href="register.html">Criar conta</a>
             </div>
         </div>
     </header>
 
-    <!-- Menu Lateral Universal[cite: 1] -->
     <div class="menu-backdrop" id="menu-backdrop"></div>
     <aside class="side-menu" id="side-menu" aria-label="Menu principal">
         <div class="side-menu-top">
-            <span class="side-menu-title">Menu</span>
+            <span class="side-menu-title" data-i18n="menu-titulo">Menu</span>
             <button class="close-menu" id="close-menu" type="button" aria-label="Fechar menu">✕</button>
         </div>
         <nav class="side-menu-links">
-            <a href="index.html"><span class="side-menu-icon">🏠</span> Página inicial</a>
-            <a href="subjects.html"><span class="side-menu-icon">📚</span> Explorar materiais</a>
-            <a href="upload.html"><span class="side-menu-icon">⬆️</span> Partilhar apontamentos</a>
-            <a href="myNotes.html"><span class="side-menu-icon">📂</span> Os meus apontamentos</a>
-            <a href="contacts.html"><span class="side-menu-icon">✉️</span> Contactos</a>
+            <a href="index.html"><span class="side-menu-icon">🏠</span> <span data-i18n="menu-lateral-inicio">Página inicial</span></a>
+            <a href="subjects.html"><span class="side-menu-icon">📚</span> <span data-i18n="menu-lateral-explorar">Explorar materiais</span></a>
+            <a href="upload.html"><span class="side-menu-icon">⬆️</span> <span data-i18n="menu-lateral-partilhar">Partilhar apontamentos</span></a>
+            <a href="myNotes.html"><span class="side-menu-icon">📂</span> <span data-i18n="menu-lateral-meus">Os meus apontamentos</span></a>
+            <a href="contacts.html"><span class="side-menu-icon">✉️</span> <span data-i18n="menu-contactos">Contactos</span></a>
         </nav>
         <div class="side-menu-bottom">
-            <p>Aprende. Partilha. Cresce.</p>
-            <a href="register.html">Criar conta gratuita <span>→</span></a>
+            <p data-i18n="menu-slogan">Aprende. Partilha. Cresce.</p>
+            <a href="register.html"><span data-i18n="btn-conta-gratis">Criar conta gratuita</span> <span>→</span></a>
         </div>
     </aside>
-  <main class="lista-apontamentos"><div class="barra-topo-apontamentos"><div><p class="app-eyebrow">Área pessoal</p><h1>Os meus apontamentos</h1></div><a class="app-header-cta" href="upload.html">Partilhar material</a></div><div id="grelha-meus-apontamentos" class="grelha-cards"><p class="loading-state">A carregar apontamentos…</p></div></main>
-  <div id="modal-inclusivo" class="modal-overlay" hidden><div class="modal-content"><button type="button" class="btn-fechar" onclick="closeModal()">✕ Fechar</button><h2 id="modal-titulo">Leitor inclusivo</h2><article id="modal-texto" class="texto-phda"></article></div></div>
-  <footer class="app-footer"><a class="app-brand" href="index.html"><span>e.</span>exe.cuTIva</a><p>Estudar melhor começa por partilhar.</p><small>© 2026 exe.cuTIva</small></footer>
+
+  <main class="lista-apontamentos">
+      <div class="barra-topo-apontamentos">
+          <div>
+              <p class="app-eyebrow" data-i18n="mynotes-eyebrow">Área pessoal</p>
+              <h1 data-i18n="mynotes-title">Os meus apontamentos</h1>
+          </div>
+          <a class="app-header-cta" href="upload.html" data-i18n="upload-titulo">Partilhar material</a>
+      </div>
+      <div id="grelha-meus-apontamentos" class="grelha-cards">
+          <p class="loading-state" data-i18n="mynotes-loading">A carregar apontamentos…</p>
+      </div>
+  </main>
+
+  <!-- Modal de Visualização Unificado -->
+  <div id="modal-inclusivo" class="modal-overlay" hidden>
+      <div class="modal-content">
+          <button type="button" class="btn-fechar" onclick="closeModal()" data-i18n="mynotes-close">✕ Fechar</button>
+          <h2 id="modal-titulo">Visualizador de Apontamento</h2>
+
+          <!-- Barra de Ferramentas: Original, Inclusivo e TTS -->
+          <div class="modal-toolbar">
+              <div class="toolbar-botoes">
+                  <button type="button" id="btn-ver-original" class="btn-toolbar is-active" onclick="showOriginalNote()">
+                      📄 Documento Original
+                  </button>
+                  <button type="button" id="btn-gerar-inclusao" class="btn-toolbar btn-inclusivo-cor" onclick="generateInclusiveVersion()">
+                      🧠 Formatação Inclusiva (PHDA)
+                  </button>
+                  <button type="button" id="btn-gerar-tts" class="btn-toolbar" onclick="toggleTTSAudio()">
+                      🎧 Ouvir Apontamento (TTS)
+                  </button>
+              </div>
+
+              <!-- Contentor do Leitor de Áudio TTS -->
+              <div id="container-audio-player" class="audio-player-container" style="display: none;">
+                  <span class="audio-titulo-player">Ouvir áudio:</span>
+                  <audio id="player-audio-tts" controls preload="none">
+                      O teu navegador não suporta a reprodução de áudio.
+                  </audio>
+              </div>
+          </div>
+
+          <!-- Corpo do Visualizador -->
+          <article id="modal-texto" class="texto-phda">
+              <div id="modal-loading-state" class="loading-ia" style="display: none;">
+                  <h3 style="color:#FCC067;">🧠 A processar com Inteligência Artificial...</h3>
+                  <p>A ler, resumir e a estruturar o documento para PHDA.<br>Isto pode demorar cerca de 1 minuto.</p>
+              </div>
+              <iframe id="visualizador-pdf" src="" title="Visualizador do PDF"></iframe>
+          </article>
+      </div>
+  </div>
+
+  <footer class="app-footer">
+      <a class="app-brand" href="index.html"><span>e.</span>exe.cuTIva</a>
+      <p data-i18n="footer-slogan">Estudar melhor começa por partilhar.</p>
+      <small>© 2026 exe.cuTIva</small>
+  </footer>
   
   <script src="js/config.js"></script>
   <script src="js/language.js"></script>
   <script src="js/UI.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/notes.js"></script>
+  <script src="js/services/notesService.js"></script>
+  <script src="js/notes.js?v=99"></script>
 </body>
 </html>
