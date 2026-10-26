@@ -99,5 +99,16 @@
     "pesquisa-vazia": "No materials found.",
     "pesquisa-sugestao": "Try another search or share the first note.",
     "erro-login-like": "You need to log in to like this.",
-    "erro-like": "Server communication error."
+    "erro-like": "Server communication error.",
+    "btn-visualizar": "View",
+    "btn-resumo-inclusivo": "Inclusive Summary",
+    "btn-apagar": "Delete",
+    "modal-eyebrow": "exe.cuTIva Smart Reader",
+    "modal-titulo-padrao": "Note Viewer",
+    "modal-tab-original": "Original Document",
+    "modal-tab-inclusivo": "Inclusive Summary (ADHD)",
+    "modal-tab-tts": "Listen to Note (TTS)",
+    "modal-audio-label": "TTS Audio:",
+    "modal-ia-processando": "🧠 Processing with Artificial Intelligence...",
+    "modal-ia-descricao": "Reading, summarizing, and structuring the document for ADHD.<br>This may take about 1 minute."
 }

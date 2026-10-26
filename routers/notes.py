@@ -1,20 +1,28 @@
 
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, Response
-from sqlalchemy.orm import Session
-from dependencies import get_notes_service, get_audio_service
-from security import get_current_user
-from services.notes_service import NotesService
-from services.audio_service import AudioService
-from services.ai_accessibility_service import AIAccessibilityService
-from processors.pdf_generator import create_acessability_pdf
+import os
+from database import get_db
 from core.config_loader import load_structure
+from fastapi import (
+    APIRouter,
+    Depends,
+    UploadFile,
+    File,
+    Form,
+    HTTPException,
+    Response,
+    Query,
+    status)
+from fastapi.responses import StreamingResponse
+from models.note_like import NoteLike
 from models.users import Users
 from models.notes import Notes
-from models.note_like import NoteLike
-from database import get_db
-import os
-from fastapi.responses import StreamingResponse
-
+from processors.pdf_generator import create_acessability_pdf
+from security import get_current_user
+from services.ai_accessibility_service import AIAccessibilityService
+from services.audio_service import AudioService
+from services.notes_service import NotesService
+from dependencies import get_notes_service, get_ai_service, get_audio_service
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/api/notes", tags=["Notes"])
 
@@ -47,6 +55,21 @@ def upload_file(
     service.process_upload(title, school, course, year, subject, file, current_user.email)
     return {"message": "Upload completo!"}
 
+@router.get("/me")
+def list_my_notes(service: NotesService = Depends(get_notes_service),
+                  current_user: Users = Depends(get_current_user)):
+    """Devolve apenas os apontamentos de quem fez o login"""
+    return service.get_my_notes(current_user.email)
+
+@router.get("/{note_id}")
+def get_note_details(
+    note_id:str, service: NotesService = Depends(get_notes_service)
+    ):
+    """Ver os detalhes e metadados de um apontamento."""
+    note  = service.get_note_by_id(note_id)
+    if not note:
+        raise HTTPException(status_code=404, detail="Não encontrado")
+    return note
 
 @router.get("/{note_id}/read")
 def read_note(
@@ -59,22 +82,13 @@ def read_note(
         raise HTTPException(status_code=404, detail="Não encontrado")
     return note_data
 
-@router.get("/me")
-def list_my_notes(service: NotesService = Depends(get_notes_service), current_user: Users = Depends(get_current_user)):
-    """Devolve apenas os apontamentos de quem fez o login"""
-    return service.get_my_notes(current_user.email)
-
-@router.get("/{note_id}")
-def get_note_details(note_id:str, service: NotesService = Depends(get_notes_service)):
-    """Ver os detalhes e metadados de um apontamento."""
-    note  = service.get_note_by_id(note_id)
-    if not note:
-        raise HTTPException(status_code=404, detail="Não encontrado")
-    return note
 
 @router.get("/{note_id}/download")
-def download_note_file(note_id:str, service: NotesService = Depends(get_notes_service),
-                       current_user: Users = Depends(get_current_user)):
+def download_note_file(
+    note_id:str, 
+    service: NotesService = Depends(get_notes_service),
+    current_user: Users = Depends(get_current_user)
+    ):
     """Vai buscar o ficheiro à Cloud e injeta-o na resposta como um anexo transferível."""
     data = service.prepare_download(note_id)
     if not data:
@@ -89,32 +103,72 @@ def download_note_file(note_id:str, service: NotesService = Depends(get_notes_se
     )        
 
 @router.delete("/{note_id}")
-def delete_note(note_id:str, service: NotesService = Depends(get_notes_service), current_user: Users = Depends(get_current_user)):
+def delete_note(
+    note_id:str, 
+    service: NotesService = Depends(get_notes_service),
+    current_user: Users = Depends(get_current_user)
+    ):
     """Apaga da BD e apaga os blobs da Cloud."""
     service.delete_note(note_id, current_user.email)
     return {"message": "Apontamento apagado com sucesso"}
 
 @router.get("/{note_id}/adapt")
-def adapt_note(note_id:str, service: NotesService = Depends(get_notes_service),current_user: Users = Depends(get_current_user)):
+def adapt_note(
+    note_id:str, 
+    service: NotesService = Depends(get_notes_service),
+    current_user: Users = Depends(get_current_user),
+    ai_service: AIAccessibilityService = Depends(get_ai_service)
+    ):
     """Extrai o texto do ficheiro e envia para a IA formatar."""
     note_data= service.read_note_content(note_id)
     
     if not note_data:
         raise HTTPException(status_code=404, detail="Apontamento não encontrado")
     
-    ai_service = AIAccessibilityService()
-    adapted_text = ai_service.adapt_text(note_data["content"])
+    adapted_text = note_data.get("inclusive-summary")
+    if not adapted_text:
+        adapted_text = ai_service.adapt_text(note_data["content"])
+        if hasattr(service, "save-inclusive-summary"):
+            service.save_inclusive_summary(note_id, adapted_text)
     
     pdf_bytes = create_acessability_pdf(note_data["title"], adapted_text)
     
-    return Response (content = pdf_bytes,
-                     media_type = "application/pdf")
+    return Response (content = pdf_bytes, media_type = "application/pdf")
+
+
+@router.get("/{note_id}/audio")
+async def get_note_audio(note_id:str, 
+                         type:str = Query("original", regex= "^(original|adapted)$"),
+                         service: NotesService = Depends(get_notes_service), 
+                         ai_service: AIAccessibilityService = Depends(get_ai_service),
+                         audio_service: AudioService = Depends(get_audio_service),
+                         current_user: Users =  Depends(get_current_user)
+):
+    note_data = service.read_note_content(note_id)
+    if not note_data or not note_data.get("content"):
+        raise HTTPException(status_code = 404, detail = "Apontamento não encontrado")
+    
+    if type == 'adapted':
+        text_to_read = note_data.get("inclusive_summary")
+        if not text_to_read:
+            text_to_read = ai_service.adapt_text(note_data["content"])
+    else:
+        text_to_read = note_data["content"]
+            
+    if not text_to_read.strip():
+        raise HTTPException(
+            satus_code=400, 
+            detail= "Conteúdo indisponível para síntese de voz neste modo." 
+        )
+    return StreamingResponse(
+        audio_service.stream_audio(note_data["content"]),
+        media_type = "audio/mpeg"
+    )
 
 
 @router.post("/{note_id}/like")
 def like_note(note_id: str, current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
     
-   
     note = db.query(Notes).filter(Notes.id == note_id).first()
     if not note:
         raise HTTPException(status_code=404, detail='Apontamento não encontrado')
@@ -140,24 +194,9 @@ def delete_like(note_id: str, current_user: Users = Depends(get_current_user), d
         NoteLike.note_id == note_id                                        
     ).first()
     
-    
     if existing_like:
         db.delete(existing_like)
         db.commit()
         
     return {"message": "Gosto removido!"}
 
-@router.get("/{note_id}/audio")
-async def get_note_audio(note_id:str, 
-                         service: NotesService = Depends(get_notes_service), 
-                         audio_service: AudioService = Depends(get_audio_service),
-                         current_user: Users =  Depends(get_current_user)
-):
-    note_data = service.read_note_content(note_id)
-    if not note_data or not note_data.get("content"):
-        raise HTTPException(status_code = 404, detail = "Apontamento não encontrado")
-    
-    return StreamingResponse(
-        audio_service.stream_audio(note_data["content"]),
-        media_type = "audio/mpeg"
-    )

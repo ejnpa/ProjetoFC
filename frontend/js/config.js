@@ -1,1 +1,1 @@
-const API_BASE_URL = "http://100.89.13.43:8000/api"
+const API_BASE_URL = `${window.location.origin}/api`
