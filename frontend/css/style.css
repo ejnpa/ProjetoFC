@@ -407,17 +407,445 @@ a {
 @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 /* =========================================================
-   8. MODAL DO LEITOR INCLUSIVO
+   8. MODAL DO VISUALIZADOR E LEITOR INCLUSIVO (EXECUTIVE DESIGN)
 ========================================================= */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px); z-index: 99999; display: flex; justify-content: center; align-items: center; padding: 20px; }
-.modal-overlay[hidden] { display: none !important; }
-.modal-content { background: #ffffff; width: 100%; max-width: 1000px; height: 90vh; border-radius: 14px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; overflow: hidden; position: relative; animation: popIn 0.3s ease-out; }
-.modal-content h2 { margin: 0; padding: 20px 80px 20px 20px; background: #fbfaf7; border-bottom: 1px solid var(--app-line); color: #333; font-size: 22px; font-family: 'Playfair Display', serif; text-align: center; }
-.texto-phda { flex: 1; padding: 0; display: flex; flex-direction: column; background-color: #f4f7f6; }
-.texto-phda iframe { flex: 1; width: 100%; height: 100%; border: none; }
-.btn-fechar-modal, .btn-fechar { position: absolute; top: 15px; right: 20px; background: #ffebee; color: #d32f2f; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
-.btn-fechar-modal:hover, .btn-fechar:hover { background: #ffcdd2; }
-@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(23, 33, 31, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(12px, 3vw, 28px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay:not([hidden]) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay[hidden] {
+    display: none !important;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 1100px;
+    height: 92vh;
+    max-height: 900px;
+    border-radius: 16px;
+    border: 1px solid var(--app-line);
+    box-shadow: 0 25px 50px -12px rgba(23, 33, 31, 0.25), 0 0 1px rgba(23, 33, 31, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    transform: scale(0.96) translateY(6px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay:not([hidden]) .modal-content {
+    transform: scale(1) translateY(0);
+}
+
+/* Cabeçalho do Modal */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+    background: #fbfaf7;
+    border-bottom: 1px solid var(--app-line);
+    flex-shrink: 0;
+}
+
+.modal-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.modal-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #66726d;
+}
+
+.modal-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--app-coral);
+    display: inline-block;
+}
+
+.modal-title,
+.modal-content h2 {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--app-ink);
+    letter-spacing: -0.5px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 720px;
+}
+
+/* Botão Fechar Elegante */
+.modal-close-btn,
+.btn-fechar-modal,
+.btn-fechar {
+    position: static;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #dcded8;
+    background: #ffffff;
+    color: var(--app-ink);
+    font-size: 16px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.modal-close-btn:hover,
+.btn-fechar-modal:hover,
+.btn-fechar:hover {
+    background: #f7ebe9;
+    color: #d32f2f;
+    border-color: #f1c3be;
+    transform: rotate(90deg);
+}
+
+/* Barra de Ferramentas e Separadores */
+.modal-toolbar {
+    padding: 10px 24px;
+    background: #fdfcfb;
+    border-bottom: 1px solid var(--app-line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.toolbar-botoes {
+    display: inline-flex;
+    align-items: center;
+    background: #ece9e2;
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.btn-toolbar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #55605a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-toolbar:hover {
+    color: var(--app-ink);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.btn-toolbar.is-active {
+    background: #ffffff;
+    color: var(--app-ink);
+    border-color: rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 6px rgba(23, 33, 31, 0.08);
+    font-weight: 700;
+}
+
+.btn-toolbar.btn-inclusivo-cor:hover {
+    background: #fff6e4;
+    color: #b76e00;
+}
+
+.btn-toolbar.btn-inclusivo-cor.is-active {
+    background: #fff8eb;
+    color: #a96200;
+    border-color: #f7d5a3;
+    box-shadow: 0 2px 8px rgba(252, 192, 103, 0.25);
+}
+
+.btn-toolbar.btn-tts-cor:hover {
+    background: #edf7f5;
+    color: #176556;
+}
+
+.btn-toolbar.btn-tts-cor.is-active {
+    background: #edf7f5;
+    color: #166455;
+    border-color: #bfe5dc;
+    box-shadow: 0 2px 8px rgba(22, 100, 85, 0.15);
+}
+
+.btn-toolbar-icon {
+    font-size: 15px;
+    line-height: 1;
+}
+
+/* Contentor do Leitor de Áudio TTS */
+.audio-player-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--app-line);
+    box-shadow: 0 2px 6px rgba(23, 33, 31, 0.04);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.audio-titulo-player {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #6a746e;
+    white-space: nowrap;
+}
+
+.audio-player-container audio {
+    height: 32px;
+    outline: none;
+    max-width: 280px;
+}
+
+/* Área do Visualizador / PDF / Loading */
+.texto-phda {
+    flex: 1;
+    position: relative;
+    background-color: #f5f4ef;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.texto-phda iframe {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+}
+
+/* Estado de Carregamento com IA */
+.loading-ia {
+    position: absolute;
+    inset: 0;
+    background: #fbfaf7;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 20px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.loading-ia-spinner {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 3px solid #e7e4dc;
+    border-top-color: var(--app-coral);
+    border-right-color: var(--app-yellow);
+    animation: spinLoader 0.9s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-ia-title,
+.loading-ia h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--app-ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+}
+
+.loading-ia-desc,
+.loading-ia p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #647069;
+    max-width: 440px;
+    margin: 0;
+}
+
+@keyframes spinLoader {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* =========================================================
+   8.1 BOTÕES DOS CARTÕES (VISUALIZAÇÃO, RESUMO INCLUSIVO E AÇÕES)
+========================================================= */
+.card-estudo .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-estudo .capa {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.badge-formato {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 3px 8px;
+    background: rgba(23, 33, 31, 0.78);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 4px;
+    letter-spacing: 0.6px;
+}
+
+.card-acoes-principais {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0 12px;
+}
+
+.btn-card-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Botão Visualizar Documento Original */
+.btn-ver-doc {
+    background: #f4f3ef;
+    color: var(--app-ink);
+    border-color: #dfded8;
+}
+
+.btn-ver-doc:hover {
+    background: #ece8df;
+    border-color: #cbccc4;
+    transform: translateY(-1px);
+    color: var(--app-ink);
+}
+
+/* Botão Resumo Inclusivo (IA / PHDA) */
+.btn-resumo-inc {
+    background: #fff8eb;
+    color: #a85f00;
+    border-color: #f7d5a3;
+}
+
+.btn-resumo-inc:hover {
+    background: #feedce;
+    border-color: #f4be6e;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(252, 192, 103, 0.28);
+    color: #8c4e00;
+}
+
+/* Barra secundária: Gostos e Apagar */
+.card-acoes-secundarias {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #eeece6;
+    margin-top: 2px;
+}
+
+.btn-apagar-nota {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #7d8580;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.btn-apagar-nota:hover {
+    color: #d32f2f;
+    background: #fdf2f2;
+    border-color: #fadbd8;
+}
+
+.icone-lixo {
+    font-size: 13px;
+    line-height: 1;
+}
 
 /* =========================================================
    9. MEDIA QUERIES (RESPONSIVO)
@@ -438,6 +866,8 @@ a {
     .section-intro h2, .steps-copy h2 { font-size: 40px; }
     .home-footer, .app-footer { display: block; }
     .home-footer p, .app-footer p { margin: 18px 0; }
+    .modal-content { height: 94vh; max-height: none; }
+    .modal-title, .modal-content h2 { max-width: 420px; }
 }
 
 @media (max-width: 520px) {
@@ -457,6 +887,16 @@ a {
     .auth-card h1 { font-size: 38px; }
     .notes-page .lista-apontamentos { padding: 48px 22px; }
     .home-signup, .app-header-cta { padding: 9px 11px !important; font-size: 12px !important; }
+    .modal-overlay { padding: 8px; }
+    .modal-content { height: 97vh; border-radius: 12px; }
+    .modal-header { padding: 12px 14px; }
+    .modal-title, .modal-content h2 { font-size: 16px; max-width: 220px; }
+    .modal-toolbar { padding: 8px 12px; }
+    .toolbar-botoes { width: 100%; gap: 3px; }
+    .btn-toolbar { flex: 1; justify-content: center; padding: 7px 6px; font-size: 11px; gap: 4px; }
+    .audio-player-container { width: 100%; justify-content: space-between; }
+    .audio-player-container audio { max-width: 170px; }
+    .card-acoes-principais { grid-template-columns: 1fr; }
 }
 
 /* =========================================================

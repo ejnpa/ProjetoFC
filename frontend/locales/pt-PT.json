@@ -99,5 +99,16 @@
     "pesquisa-vazia": "Não encontrámos materiais.",
     "pesquisa-sugestao": "Tenta outra pesquisa ou partilha o primeiro apontamento.",
     "erro-login-like": "Precisas de entrar na conta para dar gosto.",
-    "erro-like": "Erro de comunicação com o servidor."
+    "erro-like": "Erro de comunicação com o servidor.",
+    "btn-visualizar": "Visualizar",
+    "btn-resumo-inclusivo": "Resumo Inclusivo",
+    "btn-apagar": "Apagar",
+    "modal-eyebrow": "Leitor Inteligente exe.cuTIva",
+    "modal-titulo-padrao": "Visualizador de Apontamento",
+    "modal-tab-original": "Documento Original",
+    "modal-tab-inclusivo": "Resumo Inclusivo (PHDA)",
+    "modal-tab-tts": "Ouvir Apontamento (TTS)",
+    "modal-audio-label": "Áudio TTS:",
+    "modal-ia-processando": "🧠 A processar com Inteligência Artificial...",
+    "modal-ia-descricao": "A ler, resumir e a estruturar o documento para PHDA.<br>Isto pode demorar cerca de 1 minuto."
 }

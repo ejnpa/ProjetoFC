@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from services.audio_service import AudioService
 
-_ai_service_instance_ = AIAccessibilityService
+_ai_service_instance_ = AIAccessibilityService()
 
 def get_ai_service():
     return _ai_service_instance_

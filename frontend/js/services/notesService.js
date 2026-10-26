@@ -19,8 +19,8 @@ const notesService = {
         return response.blob();
     },
 
-    getAudioUrl(noteId){
-        return `${API_BASE_URL}/notes/${noteId}/audio`;
+    getAudioUrl(noteId, type = 'original'){
+        return `${API_BASE_URL}/notes/${noteId}/audio?type=${type} `;
     },
 
     async toggleLike(noteId){
@@ -39,9 +39,5 @@ const notesService = {
         });
         if (!response.ok) throw new Error('Falha ao remover o apontamento.');
         return response.ok;
-    },
-
-    getAudioUrl(noteId){
-        return `${API_BASE_URL}/notes/${noteId}/audio`;
     }
 }

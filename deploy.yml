@@ -1,25 +1,37 @@
 ---
-- name : Deploy do ProjetoFC para o Desktop
+- name : Deploy e atualização da plataforma exe.cuTIva
   hosts: desktop
-  gather_facts: no
+  gather_facts: false
   tasks:
     - name: Garantir que a pasta de destino existe
-      file: 
-        path: /home/emanuel/ProjetoFC
+      ansible.builtin.file:
+        path: /home/emanuel/executiva
         state: directory
+        owner: emanuel
+        group: emanuel
+        mode: '0755'
 
-    - name: Sincronizar o código
+
+    - name: Sincronizar o código-fonte da aplicação
       ansible.posix.synchronize:
-        src: /mnt/c/Users/Emanuel/Desktop/ProjetoFC/
-        dest: /home/emanuel/ProjetoFC/
-        delete: yes
+        src: ./
+        dest: /home/emanuel/executiva/
+        delete: false
         rsync_opts: 
           - "--exclude=.git"
           - "--exclude=__pycache__"
           - "--exclude=.venv"
           - "--exclude=node_modules"
-
+          - "--exclude=infrastructure/.terraform"
+          - "--exclude=media"
+          - "--exclude=*.pyc"
+      become: false   
+      
     - name: Reconstruir e levantar infraestrutura Docker
-      shell: docker compose up -d --build
-      args:
-        chdir: /home/emanuel/ProjetoFC/
+      community.docker.docker_compose_v2:
+          project_src: /home/emanuel/executiva
+          state: present
+          build: always
+      become: false
+
+    
