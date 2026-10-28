@@ -123,6 +123,25 @@
               </div>
           </div>
 
+        <label for="tts-speed" class="tts-speed-control">
+            <span data-i18n="modal-audio-speed">Velocidade:</span>
+                <select id="tts-speed" aria-label="Velocidade da leitura">
+                    <option value="0.75">0,75×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="1.25">1,25×</option>
+                    <option value="1.5">1,5×</option>
+                    <option value="2">2×</option>
+                </select>
+        </label>
+
+        <button type="button" onclick="saveArtifact('summary')">
+    Guardar resumo
+</button>
+
+<button type="button" onclick="saveArtifact('audio')">
+    Guardar áudio
+</button>
+
           <!-- Corpo do Visualizador -->
           <article id="modal-texto" class="texto-phda">
               <div id="modal-loading-state" class="loading-ia" style="display: none;">

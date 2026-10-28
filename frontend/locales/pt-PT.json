@@ -110,5 +110,6 @@
     "modal-tab-tts": "Ouvir Apontamento (TTS)",
     "modal-audio-label": "Áudio TTS:",
     "modal-ia-processando": "🧠 A processar com Inteligência Artificial...",
-    "modal-ia-descricao": "A ler, resumir e a estruturar o documento para PHDA.<br>Isto pode demorar cerca de 1 minuto."
+    "modal-ia-descricao": "A ler, resumir e a estruturar o documento para PHDA.<br>Isto pode demorar cerca de 1 minuto.",
+    "modal-audio-speed": "Velocidade de Reprodução"
 }

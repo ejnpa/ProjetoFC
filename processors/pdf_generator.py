@@ -5,7 +5,7 @@ from weasyprint import HTML
 
 
 def create_acessability_pdf(title:str, ai_text:str) -> bytes:
-    html_content = markdown.markdown(bionic_reader(ai_text))
+    html_content = markdown.markdown(_bionic_reader(ai_text))
     
     ll_html = f"""
     <html>
@@ -87,7 +87,7 @@ def create_acessability_pdf(title:str, ai_text:str) -> bytes:
     
     
     
-def bionic_reader(text:str) -> str:
+def _bionic_reader(text:str) -> str:
     
     def bionic_wording(match):
         word = match.group(0)

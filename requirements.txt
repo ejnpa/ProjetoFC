@@ -140,3 +140,4 @@ yara-python==4.5.4
 yarl==1.25.1
 weasyprint
 gunicorn
+google-cloud-storage

@@ -34,4 +34,12 @@
           build: always
       become: false
 
+    - name: Limpar cache expirado
+      ansible.builtin.cron:
+        name: limpar cache da plataforma
+        user: emanuel
+        minute: "15"
+        hour: "3"
+        job: "docker exec -w /app executiva_api python -m scripts.clean_generated_cache"
+
     

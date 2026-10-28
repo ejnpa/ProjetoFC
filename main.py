@@ -3,7 +3,7 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import auth, notes
+from routers import auth, notes, library
 import models
 
 
@@ -33,6 +33,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(notes.router)
+app.include_router(library.router)
 
 
         

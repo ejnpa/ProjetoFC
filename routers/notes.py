@@ -24,6 +24,8 @@ from services.notes_service import NotesService
 from dependencies import get_notes_service, get_ai_service, get_audio_service
 from sqlalchemy.orm import Session
 
+
+
 router = APIRouter(prefix="/api/notes", tags=["Notes"])
 
 @router.get("/structure")
@@ -117,7 +119,7 @@ def adapt_note(
     note_id:str, 
     service: NotesService = Depends(get_notes_service),
     current_user: Users = Depends(get_current_user),
-    ai_service: AIAccessibilityService = Depends(get_ai_service)
+    artifacts: GeneratedArtifactService = Depends(get_generated_artifact_service)
     ):
     """Extrai o texto do ficheiro e envia para a IA formatar."""
     note_data= service.read_note_content(note_id)
@@ -125,13 +127,9 @@ def adapt_note(
     if not note_data:
         raise HTTPException(status_code=404, detail="Apontamento não encontrado")
     
-    adapted_text = note_data.get("inclusive-summary")
-    if not adapted_text:
-        adapted_text = ai_service.adapt_text(note_data["content"])
-        if hasattr(service, "save-inclusive-summary"):
-            service.save_inclusive_summary(note_id, adapted_text)
+    summary, _cache_key = artifacts.get_or_create_summary(note_id, note_data['content'])
     
-    pdf_bytes = create_acessability_pdf(note_data["title"], adapted_text)
+    pdf_bytes = create_acessability_pdf(note_data["title"], summary)
     
     return Response (content = pdf_bytes, media_type = "application/pdf")
 
@@ -140,30 +138,24 @@ def adapt_note(
 async def get_note_audio(note_id:str, 
                          type:str = Query("original", regex= "^(original|adapted)$"),
                          service: NotesService = Depends(get_notes_service), 
-                         ai_service: AIAccessibilityService = Depends(get_ai_service),
-                         audio_service: AudioService = Depends(get_audio_service),
-                         current_user: Users =  Depends(get_current_user)
+                         current_user: Users =  Depends(get_current_user),
+                         artifacts: GeneratedArtifactService = Depends(get_generated_artifact_service)
 ):
     note_data = service.read_note_content(note_id)
     if not note_data or not note_data.get("content"):
         raise HTTPException(status_code = 404, detail = "Apontamento não encontrado")
     
     if type == 'adapted':
-        text_to_read = note_data.get("inclusive_summary")
-        if not text_to_read:
-            text_to_read = ai_service.adapt_text(note_data["content"])
+        text_to_read, _ = artifacts.get_or_create_summary(note_id, note_data['content'])
     else:
         text_to_read = note_data["content"]
             
-    if not text_to_read.strip():
-        raise HTTPException(
-            satus_code=400, 
-            detail= "Conteúdo indisponível para síntese de voz neste modo." 
-        )
-    return StreamingResponse(
-        audio_service.stream_audio(note_data["content"]),
-        media_type = "audio/mpeg"
+    audio_bytes, _cache_key = await artifacts.get_or_create_audio(
+        note_id = note_id,
+        variant = type,
+        text=text_to_read
     )
+    return Response(content=audio_bytes, media_type= "audio/mpeg")
 
 
 @router.post("/{note_id}/like")

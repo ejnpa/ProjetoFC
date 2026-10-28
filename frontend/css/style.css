@@ -629,6 +629,24 @@ body.modal-open {
     line-height: 1;
 }
 
+
+.tts-speed-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+#tts-speed {
+    min-height: 32px;
+    border: 1px solid var(--app-line);
+    border-radius: 6px;
+    padding: 0 6px;
+    background: #fff;
+}
+
+
 /* Contentor do Leitor de Áudio TTS */
 .audio-player-container {
     display: flex;

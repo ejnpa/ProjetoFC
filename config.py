@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     ollama_url: str = "http://100.89.13.43:11434"
     database_url: str = "sqlite:///./database.db"
     secret_key: str = "supersecretkey"
+    generated_cache_ttl_days: int = 7
     
     
     class Config:

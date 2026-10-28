@@ -20,7 +20,7 @@ const notesService = {
     },
 
     getAudioUrl(noteId, type = 'original'){
-        return `${API_BASE_URL}/notes/${noteId}/audio?type=${type} `;
+        return `${API_BASE_URL}/notes/${noteId}/audio?type=${encodeURIComponent(type)} `;
     },
 
     async toggleLike(noteId){
@@ -40,4 +40,17 @@ const notesService = {
         if (!response.ok) throw new Error('Falha ao remover o apontamento.');
         return response.ok;
     }
+}
+
+async function saveArtifact(noteId, kind, variant ){
+    const response = await fetch(`${API_BASE_URL}/library/save`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json' },
+        body: JSON.stringify({note_id: noteId, kind, variant})
+    });
+
+    if (!response.ok) throw new Error('Não foi possível guardar na biblioteca.');
+
+    return response.json();
 }

@@ -9,7 +9,8 @@ const escapeHtml = (value) =>
 const state = {
     notes: [],
     activeNote: null,
-    adaptedBlobUrl: null
+    adaptedBlobUrl: null,
+    currentView: 'original'
 };
 
 let currentAbortController = null;
@@ -146,11 +147,14 @@ async function openDocumentModal(id, viewMode = 'original') {
     } 
 
     state.activeNote = note;
+    
 
     if (state.adaptedBlobUrl) {
          URL.revokeObjectURL(state.adaptedBlobUrl);
          state.adaptedBlobUrl = null;
     }
+
+    state.currentView = viewMode === 'inclusive' ? 'adapted' : 'original';
 
     const modal = document.getElementById('modal-inclusivo');
     const titulo = document.getElementById('modal-titulo');
@@ -219,6 +223,8 @@ function closeModal() {
 function showOriginalNote() {
     if (!state.activeNote) return;
 
+    state.currentView = 'original';
+
     const iframe = document.getElementById('visualizador-pdf');
     const loadingContainer = document.getElementById('modal-loading-state');
     const btnOriginal = document.getElementById('btn-ver-original');
@@ -239,6 +245,8 @@ function showOriginalNote() {
  */
 async function generateInclusiveVersion() {
     if (!state.activeNote) return;
+
+    state.currentView = 'adapted';
 
     const iframe = document.getElementById('visualizador-pdf');
     const loadingContainer = document.getElementById('modal-loading-state');
@@ -360,6 +368,7 @@ async function toggleTTSAudio() {
     try {
         const targetUrl = notesService.getAudioUrl(state.activeNote.id, state.currentView);
         playerAudio.src = targetUrl;
+        applyTTSSpeed();
         audioContainer.style.display = 'flex';
         if (btnTTS){
             btnTTS.classList.add('is-active');
@@ -381,4 +390,55 @@ async function toggleTTSAudio() {
             btnTTS.innerHTML = originalContent;  
         }
     }
+}
+
+const TTS_SPEED_KEY='ttsPlaybackRate';
+function applyTTSSpeed(){
+    const playerAudio = document.getElementById('player-audio-tts');
+    const speedSelect = document.getElementById('tts-speed');
+
+    if (!playerAudio || !speedSelect) return;
+
+    const rate = Number(speedSelect.value);
+    if (!Number.isFinite(rate) || rate <= 0) return;
+
+    playerAudio.playbackRate = rate;
+    playerAudio.defaultPlaybackRate = rate;
+    localStorage.setItem(TTS_SPEED_KEY, speedSelect.value);
+
+}
+
+function initTTSSpeed(){
+    const speedSelect = document.getElementById('tts-speed');
+    if (!speedSelect) return;
+
+    const savedSpeed = localStorage.getItem(TTS_SPEED_KEY);
+    const optionExists = [...speedSelect.option]
+        .some(option => option.value === savedSpeed)
+
+    if (optionExists) {
+        speedSelect.value = savedSpeed;
+    }
+
+    speedSelect.addEventListener('change', applyTTSSpeed);
+    applyTTSSpeed();
+}
+
+initTTSSpeed();
+
+async function saveArtifact(kind){
+    if (!state.activeNote) return;
+
+    const variant = kind === 'summary' ? 'adapted' : state.currentView;
+
+    try {
+        await notesService.saveArtifact(state.activeNote.id, kind, variant);
+        showAlerts?.('Guardado na biblioteca.', 'sucesso');
+        
+    } catch (error) {
+        console.error(error);
+        showAlerts?.(error.message, 'erro')
+    }
+
+
 }

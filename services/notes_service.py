@@ -73,8 +73,6 @@ class NotesService:
     def get_filtered_notes(self, school: str = None, course: str = None, year: str = None, subject: str = None):
         return self.repo.get_all_with_filters(school, course, year, subject)
             
-    def get_all_notes(self):
-        return self.repo.get_all()
     
     def get_my_notes(self, author_email: str):
         return self.repo.get_by_author(author_email)

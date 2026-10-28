@@ -14,3 +14,6 @@ def get_storage_provider() -> StorageInterface:
         return GCPStorage()
     elif provider == "AZURE":
         return AzureStorage()
+    
+    raise ValueError( f"CLOUD_PROVIDER inválido: {provider}. "
+                    "Valores possíveis: LOCAL, GCP ou AZURE.")

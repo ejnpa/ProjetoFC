@@ -110,5 +110,6 @@
     "modal-tab-tts": "Listen to Note (TTS)",
     "modal-audio-label": "TTS Audio:",
     "modal-ia-processando": "🧠 Processing with Artificial Intelligence...",
-    "modal-ia-descricao": "Reading, summarizing, and structuring the document for ADHD.<br>This may take about 1 minute."
+    "modal-ia-descricao": "Reading, summarizing, and structuring the document for ADHD.<br>This may take about 1 minute.",
+    "modal-audio-speed": "Reproduction Speed"
 }

@@ -31,14 +31,14 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def get_token_from_cookie(request: Request):
+def _get_token_from_cookie(request: Request):
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail="É necessário efetuar login.")
     return token
 
-def get_current_user(token: str = Depends(get_token_from_cookie), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(_get_token_from_cookie), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Não foi possivel validar credenciais"

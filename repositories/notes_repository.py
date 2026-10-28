@@ -24,9 +24,6 @@ class NotesRepository:
         self.db.refresh(new_note)
         return new_note
     
-    def get_all(self):
-        return self.db.query(Notes).all()
-    
     def get_by_id(self, note_id: int) -> Notes:
         return self.db.query(Notes).filter(Notes.id == note_id).first()
     

@@ -13,7 +13,7 @@ router = APIRouter(
     tags=["Authentication"],
 )
 
-def get_users_service(db: Session = Depends(get_db)) -> UsersService:
+def _get_users_service(db: Session = Depends(get_db)) -> UsersService:
     repo = UsersRepository(db)
     return UsersService(repo)
 
@@ -24,7 +24,7 @@ class UserCreate(BaseModel):
     password: str
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-def register_user(user: UserCreate, service:UsersService = Depends(get_users_service)):
+def register_user(user: UserCreate, service:UsersService = Depends(_get_users_service)):
    
     new_user = service.register_new_user(user.username, user.email, user.password)
    
@@ -39,7 +39,7 @@ def register_user(user: UserCreate, service:UsersService = Depends(get_users_ser
 @router.post("/login")
 def login(response: Response = None,
           form_data: OAuth2PasswordRequestForm = Depends(),
-          service:UsersService = Depends(get_users_service)         
+          service:UsersService = Depends(_get_users_service)         
 ):
     token = service.authenticate_user(form_data.username, form_data.password)
     
